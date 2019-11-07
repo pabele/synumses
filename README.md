@@ -1,4 +1,4 @@
-# synumses
+# SyNumSeS
 
-Synumses is a package for simulating various semiconductor devices.
+SyNumSeS is a package for simulating various semiconductor devices.
 
