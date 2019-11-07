@@ -1,0 +1,9 @@
+#!/bin/bash
+
+echo Start
+date
+
+python3 python_code_generator_scharfetter_gummel_bernoulli.py > scharfetter_gummel_bernoulli.py
+
+echo End
+date

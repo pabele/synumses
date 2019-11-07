@@ -1,0 +1,14 @@
+Metadata-Version: 1.2
+Name: synumses-pkg-pabele
+Version: 0.1
+Summary: Symbolic and numerical simulation of semiconductor devices
+Home-page: UNKNOWN
+Author: Peter Abele
+Author-email: ppabele@web.de
+License: MIT
+Description: UNKNOWN
+Platform: UNKNOWN
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.6
