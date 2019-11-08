@@ -2,7 +2,7 @@ from sympy import symbols, Symbol
 from sympy import Function
 from sympy import solve, pretty
 from sympy import diff
-from sympy import sin, cos, exp, ln, sinh, cosh, sqrt, exp
+from sympy import sin, cos, exp, ln, sinh, cosh, sqrt, exp, Abs
 from sympy import simplify, trigsimp
 from sympy.parsing.sympy_parser import parse_expr
 
@@ -17,9 +17,9 @@ def simplify(x):
 
 def bernoulli_poly(expr):
     #return 1.0
-    #return 1.0 - expr/2.0
-    # return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 
-    return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 + expr**6/30240.0 
+    return 1.0 - expr/2.0
+    #return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 
+    #return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 + expr**6/30240.0 
     #return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 + expr**6/30240.0 - expr**8/1209600.0
     #return expr/(exp(expr) - 1)
 
@@ -27,7 +27,7 @@ def bernoulli_exp(expr):
     return expr/(exp(expr) - 1)
 
 
-def substituteFunctions(function, sub_functions, left_side, partial_derivative = None,  sub_args=(), tabs=0, do_simplify = 0):
+def substituteFunctions(function, sub_functions, left_side, sub_args = None, partial_derivative = None, tabs=0, do_simplify = 0):
     """
     *function* is a sympy function which is analysed
     *sub_functions*
@@ -42,7 +42,6 @@ def substituteFunctions(function, sub_functions, left_side, partial_derivative =
             if(str(type(funcs)) == str(sub_function["function"])):
                     found_arguments.append(funcs.args[0])
 
-            comb = (found_arguments, sub_function["if_states"], )
             comb = (sub_function, found_arguments, )
 
 
@@ -62,7 +61,6 @@ def substituteFunctions(function, sub_functions, left_side, partial_derivative =
                 else:
                     print(function.subs(sub_args))
         else:
-
             for i in range(len(comb[0]["if_states"])**len(comb[1])):
                 substitutes = []
                 perm = [int(j) for j in str(bin(i))[2:].zfill(len(comb[1]))]
@@ -70,11 +68,21 @@ def substituteFunctions(function, sub_functions, left_side, partial_derivative =
                     print("\t ", end = '')
                 print("if ", end = '')
                 for k in range(len(comb[1])):
-                    print(comb[0]["if_states"][perm[k]].format(argument = comb[1][k], value = comb[0]["value"]), end = '')
+                    print('(', end = '')
+                    print(comb[0]["if_expr"](comb[1][k]).subs(sub_args), end = '')
+                    print(comb[0]["if_states"][perm[k]], end = '')
+                    print(comb[0]["value"], end = '')
+                    print(')', end = '')
                     if (k < (len(comb[1])-1)):
                         print(" and ", end = '')
                     substitutes.append((comb[0]["function"](comb[1][k]), (comb[0]["subs"][perm[k]](comb[1][k]))), )
                 print(":")
+
+                print("###")
+                print("### function:", function)
+                print("### substitutes:", substitutes)
+                print("### sub_args:", sub_args)
+                print("###")
 
                 for j in range(tabs+1):
                     print("\t ", end = '')
@@ -82,17 +90,19 @@ def substituteFunctions(function, sub_functions, left_side, partial_derivative =
                 
                 if  partial_derivative is not None:
                     if (do_simplify):
-                        print(simplify(diff(function.subs(substitutes), partial_derivative)).subs(sub_args))
+                        print(simplify(diff(function, partial_derivative).subs(substitutes)).subs(sub_args))
                     else:
-                        print(diff(function.subs(substitutes), partial_derivative).subs(sub_args))
+                        print(diff(function, partial_derivative).subs(substitutes).subs(sub_args))
                 else:
                     if (do_simplify):
-                        print(simplify(function).subs(sub_args))
+                        print(simplify(function.subs(substitutes)).subs(sub_args))
                     else:
-                        print(function.subs(sub_args))
+                        print(function.subs(substitutes).subs(sub_args))
 
 
 def makeUpdate_b(name, functions, search_sub_functions, substitutes):
+
+    
 
     print("################################")
     print("########### {name} ###########".format(name=name))
@@ -171,6 +181,7 @@ def codeGenerator():
 
     np_exp  = Function('np.exp')
     np_sqrt = Function('np.sqrt')
+    np_abs  = Function('np.abs')
 
     kB = symbols('parameters.kB')
     T  = symbols('parameters.T')
@@ -257,8 +268,11 @@ def codeGenerator():
                               (Phi_p_m1, 'Ua'),
                               (Phi_n_m1, 'Ua'),
                               (exp,np_exp),
-                              (sqrt,np_sqrt)),
-                   "right" : ((Psi_p1, '( ohm_potential(parameters.C[parameters.n-1], parameters.Ec[parameters.n-1], parameters.Ev[parameters.n-1], parameters.Nc[parameters.n-1], parameters.Nv[parameters.n-1]) + Ub)'),
+                              (sqrt,np_sqrt),
+                              (Abs,np_abs)
+    ),
+                   "right" : ((Psi_p1, '( ohm_potential(parameters.C[parameters.n-1], parameters.Ec[parameters.n-1], parameters.Ev[parameters.n-1], parameters.Nc[parameters.n-1], parameters.Nv[parameters.n-1]) + Ub)'
+                   ),
                               (Phi_p_p1, 'Ub'),
                               (Phi_n_p1, 'Ub'),
                               (Ev_p1, Ev_00),
@@ -266,10 +280,14 @@ def codeGenerator():
                               (Ec_p1, Ec_00),
                               (Nc_p1, Nc_00),
                               (exp,np_exp),
-                              (sqrt,np_sqrt)),
+                              (sqrt,np_sqrt),
+                              (Abs,np_abs)
+                   ),
                    "center": ((1,1),
                               (exp,np_exp),
-                              (sqrt,np_sqrt))
+                              (sqrt,np_sqrt),
+                              (Abs,np_abs)
+                   )
         }
 
     print("####################################")
@@ -397,14 +415,23 @@ def codeGenerator():
     bernoulli_limit = symbols('parameters.bernoulli_limit')
 
     search_sub_function = {"function"  : bernoulli,
-                           "if_states" : ['(np.abs({argument}) <= {value})',
-                                          '(np.abs({argument})  > {value})'],
-                           "subs"      : [bernoulli_poly, bernoulli_exp],
-                           "value"     : bernoulli_limit}
+                           "if_expr"   : Abs,
+                           "if_states" : ['<=',
+                                          '> '],
+                           "value"     : bernoulli_limit,
+                           "subs"      : [bernoulli_poly,
+                                          bernoulli_exp]}
 
     search_sub_functions = ()
     search_sub_functions = search_sub_functions + (search_sub_function, )
 
+    
+    makeUpdate_b("update_a", [["3*i+0",
+                               bernoulli(Psi_p1),
+                               "bernoulli"],
+                              ["3*i+1",
+                               bernoulli(Psi_p1-Psi_00)*bernoulli(Psi_p1),
+                               "bernoulli"], ], search_sub_functions, substitutes)
 
     makeUpdate_b("update_b", functions, search_sub_functions, substitutes)
 
