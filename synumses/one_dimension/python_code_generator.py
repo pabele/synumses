@@ -127,7 +127,7 @@ def makeUpdate_b(name, functions, search_sub_functions, substitutes):
         print("\t \t \t #################")
         for function in functions:
 
-             substituteFunctions(-function[1],
+             substituteFunctions(function[1],
                                  search_sub_functions,
                                  left_side = "parameters.b["+function[0]+"]",
                                  sub_args = substitutes[s],
@@ -425,14 +425,6 @@ def codeGenerator():
     search_sub_functions = ()
     search_sub_functions = search_sub_functions + (search_sub_function, )
 
-    
-    makeUpdate_b("update_a", [["3*i+0",
-                               bernoulli(Psi_p1),
-                               "bernoulli"],
-                              ["3*i+1",
-                               bernoulli(Psi_p1-Psi_00)*bernoulli(Psi_p1),
-                               "bernoulli"], ], search_sub_functions, substitutes)
-
     makeUpdate_b("update_b", functions, search_sub_functions, substitutes)
 
     
@@ -639,108 +631,9 @@ def codeGenerator():
         }
 
 
-    print("#######################################")
-    print("########### First Function ###########")
-    print("#######################################")
 
-    print("def first_update_b(Ua, Ub):")
-    print()
-    print("\t for i in range(0, parameters.n):")
+    makeUpdate_b("first_update_b", functions, search_sub_functions, substitutes)
 
-    for s in ["left", "right", "center"]:
-        if (s =="left"):
-            print("\t \t if (i==0) :")
-        elif (s=="right"):
-            print("\t \t elif(i==parameters.n-1):")
-        else:
-            print("\t \t else:")
-
-        print("\t \t \t #################")
-        print("\t \t \t ### ",s, "###")
-        print("\t \t \t #################")
-        for function in functions:
-
-            # 
-            # (Psi_00 - Psi_m1) <  bernoulli_limit
-            # (Psi_p1 - Psi_00) <  bernoulli_limit
-            #
-            print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                        ") and  (np.abs(", (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                  ")):")
-            print("\t \t \t \t parameters.b["+function[0]+"] = ",
-                  simplify(function[1].subs(
-                      [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                        (bernoulli_poly(+(Psi_00-Psi_m1)/Ut))),
-                       (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                        (bernoulli_poly(-(Psi_00-Psi_m1)/Ut))),
-                       (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                        (bernoulli_poly(+(Psi_p1-Psi_00)/Ut))),
-                       (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                        (bernoulli_poly(-(Psi_p1-Psi_00)/Ut)))
-                      ]).subs(substitutes[s])))
-
-
-            # (Psi_00 - Psi_m1) >= bernoulli_limit
-            # (Psi_p1 - Psi_00) <  bernoulli_limit
-            #
-            print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                        ") and  (np.abs(", (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                  ")):")
-            print("\t \t \t \t parameters.b["+function[0]+"] = ",
-                  simplify(function[1].subs(
-                      [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                        (bernoulli_exp(+(Psi_00-Psi_m1)/Ut))),
-                       (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                        (bernoulli_exp(-(Psi_00-Psi_m1)/Ut))),
-                       (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                        (bernoulli_poly(+(Psi_p1-Psi_00)/Ut))),
-                       (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                        (bernoulli_poly(-(Psi_p1-Psi_00)/Ut)))
-                      ]).subs(substitutes[s])))
-
-            # 
-            # (Psi_00 - Psi_m1) <  bernoulli_limit
-            # (Psi_p1 - Psi_00) >= bernoulli_limit
-            #        
-            print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                        ") and  (np.abs(", (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                  ")):")
-            print("\t \t \t \t parameters.b["+function[0]+"] = ",
-                  simplify(function[1].subs(
-                      [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                        (bernoulli_poly(+(Psi_00-Psi_m1)/Ut))),
-                       (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                        (bernoulli_poly(-(Psi_00-Psi_m1)/Ut))),
-                       (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                        (bernoulli_exp(+(Psi_p1-Psi_00)/Ut))),
-                       (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                        (bernoulli_exp(-(Psi_p1-Psi_00)/Ut)))
-                      ]).subs(substitutes[s])))
-
-            # 
-            # (Psi_00 - Psi_m1) >=  bernoulli_limit
-            # (Psi_p1 - Psi_00) >= bernoulli_limit
-            #        
-            print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                        ") and  (np.abs(", (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                  ")):")
-            print("\t \t \t \t parameters.b["+function[0]+"] = ",
-                  simplify(function[1].subs(
-                      [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                        (bernoulli_exp(+(Psi_00-Psi_m1)/Ut))),
-                       (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                        (bernoulli_exp(-(Psi_00-Psi_m1)/Ut))),
-                       (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                        (bernoulli_exp(+(Psi_p1-Psi_00)/Ut))),
-                       (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                        (bernoulli_exp(-(Psi_p1-Psi_00)/Ut)))
-                      ]).subs(substitutes[s])))     
-
-    print() 
-    print("\t return None")
-    print()
-    print()
-    print()
 
     print("######################################")
     print("###########  First Jacobi  ###########")
