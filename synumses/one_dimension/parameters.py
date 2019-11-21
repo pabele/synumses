@@ -1,5 +1,5 @@
 """
-Within this module all parameters are defines
+Within this module all parameters are defined
 """
 
 
@@ -33,6 +33,7 @@ lx = 400E-9
 # *********************************************
 #  Limit for Bernoulli function epproximation
 # *********************************************
+
 bernoulli_limit = 1E-4 # Default 1E-4
 
 

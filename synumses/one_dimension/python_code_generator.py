@@ -42,7 +42,7 @@ def substituteFunctions(function, sub_functions, left_side, sub_args = None, par
             if(str(type(funcs)) == str(sub_function["function"])):
                     found_arguments.append(funcs.args[0])
 
-            comb = (sub_function, found_arguments, )
+        comb = (sub_function, found_arguments, )
 
 
         if not found_arguments:
@@ -81,6 +81,7 @@ def substituteFunctions(function, sub_functions, left_side, sub_args = None, par
                 print("###")
                 print("### function:", function)
                 print("### substitutes:", substitutes)
+                print("#### partial_derivative:", partial_derivative)
                 print("### sub_args:", sub_args)
                 print("###")
 
@@ -92,7 +93,8 @@ def substituteFunctions(function, sub_functions, left_side, sub_args = None, par
                     if (do_simplify):
                         print(simplify(diff(function, partial_derivative).subs(substitutes)).subs(sub_args))
                     else:
-                        print(diff(function, partial_derivative).subs(substitutes).subs(sub_args))
+                        #print(diff(function, partial_derivative).subs(substitutes).subs(sub_args))
+                        print(diff(function.subs(substitutes), partial_derivative).subs(sub_args))
                 else:
                     if (do_simplify):
                         print(simplify(function.subs(substitutes)).subs(sub_args))
@@ -479,106 +481,17 @@ def codeGenerator():
                               ]),
                           partial_derivative[1]).subs(substitutes[s])), ")")
                 else:
+                    
+                    substituteFunctions(-function[1],
+                                        search_sub_functions, 
+                                        "parameters.A["+function[0]+","+partial_derivative[0]+"]",
+                                        substitutes[s],
+                                        partial_derivative = partial_derivative[1],
+                                        tabs=4,
+                                        do_simplify = 0)
+                                        
 
-                    # 
-                    # (Psi_00 - Psi_m1) <  bernoulli_limit
-                    # (Psi_p1 - Psi_00) <  bernoulli_limit
-                    #
-                    print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                          ") and  (np.abs("      , (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                          ")):")
-                    print("\t \t \t \t parameters.A["
-                          +function[0]
-                          +","
-                          +partial_derivative[0]
-                          +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
-
-                    # 
-                    # (Psi_00 - Psi_m1) >= bernoulli_limit
-                    # (Psi_p1 - Psi_00) <  bernoulli_limit
-                    #
-                    print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                          ") and  (np.abs("      , (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                          ")):")
-                    print("\t \t \t \t parameters.A["
-                          +function[0]
-                          +","
-                          +partial_derivative[0]
-                          +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_exp(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_exp(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
-
-                    # 
-                    # (Psi_00 - Psi_m1) <  bernoulli_limit
-                    # (Psi_p1 - Psi_00) >= bernoulli_limit
-                    #
-                    print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                          ") and  (np.abs("      , (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                          ")):")
-                    print("\t \t \t \t parameters.A["
-                          +function[0]
-                          +","
-                          +partial_derivative[0]
-                          +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_exp(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_exp(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
-
-                    # 
-                    # (Psi_00 - Psi_m1) >= bernoulli_limit
-                    # (Psi_p1 - Psi_00) >= bernoulli_limit
-                    #
-                    print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                          ") and  (np.abs("      , (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                          ")):")
-                    print("\t \t \t \t parameters.A["
-                          +function[0]
-                          +","
-                          +partial_derivative[0]
-                          +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_exp(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_exp(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_exp(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_exp(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
+                    
 
 
 
