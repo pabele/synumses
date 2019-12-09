@@ -90,21 +90,19 @@ def substituteFunctions(function, sub_functions, left_side, sub_args = None, par
                 print(left_side, "= ", end = '')
                 
                 if  partial_derivative is not None:
+                    part_der = diff(function.subs(substitutes), partial_derivative).subs(sub_args)
                     if (do_simplify):
-                        print(simplify(diff(function, partial_derivative).subs(substitutes)).subs(sub_args))
+                        print(simplify(part_der))
                     else:
-                        #print(diff(function, partial_derivative).subs(substitutes).subs(sub_args))
-                        print(diff(function.subs(substitutes), partial_derivative).subs(sub_args))
+                        print(part_der)
                 else:
                     if (do_simplify):
-                        print(simplify(function.subs(substitutes)).subs(sub_args))
+                        print(simplify(function).subs(substitutes).subs(sub_args))
                     else:
                         print(function.subs(substitutes).subs(sub_args))
 
 
-def makeUpdate_b(name, functions, search_sub_functions, substitutes):
-
-    
+def makeUpdate_b(name, functions, search_sub_functions, substitutes):   
 
     print("################################")
     print("########### {name} ###########".format(name=name))
@@ -134,7 +132,7 @@ def makeUpdate_b(name, functions, search_sub_functions, substitutes):
                                  left_side = "parameters.b["+function[0]+"]",
                                  sub_args = substitutes[s],
                                  tabs = 3,
-                                 do_simplify = 0
+                                 do_simplify = 1
                 )
 
     print() 
@@ -332,34 +330,38 @@ def codeGenerator():
     print("\t j_p = np.zeros(parameters.n)")
     print()
     print("\t for i in range(0,parameters.n-1):")
-    print("\t \t if(np.abs(",(Psi_00-Psi_p1)/Ut," )<=", bernoulli_limit,"):")
-    print("\t \t \t j_p[i] = ", j_p.subs([(bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nv_k*exp(q*(Phi_p_k - Psi_k + (Ev_k + Ev_l)/2.)/(kB*T)),
-                                           bernoulli_poly(+(Psi_l-Psi_k)/(Ut)) * Nv_k*exp(q*(Phi_p_k - Psi_k + (Ev_k + Ev_l)/2.)/(kB*T))),
-                                          (bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nv_l*exp(q*(Phi_p_l - Psi_l + (Ev_k + Ev_l)/2.)/(kB*T)),
-                                           bernoulli_poly(-(Psi_l-Psi_k)/(Ut)) * Nv_l*exp(q*(Phi_p_l - Psi_l + (Ev_k + Ev_l)/2.)/(kB*T)))]).subs(([(Psi_k,   Psi_00),
-                                                                                                                                                (Psi_l,   Psi_p1),
-                                                                                                                                                (Phi_p_k, Phi_p_00),
-                                                                                                                                                (Phi_p_l, Phi_p_p1),
-                                                                                                                                                (Ev_k,    Ev_00   ),
-                                                                                                                                                (Ev_l,    Ev_p1),
-                                                                                                                                                (Nv_k,    Nv_00),
-                                                                                                                                                (Nv_l,    Nv_p1),
-                                                                                                                                                (exp,     np_exp)]))
+
+    search_sub_function = ({"function"  : bernoulli,
+                           "if_expr"   : Abs,
+                           "if_states" : ['<=',
+                                          '> '],
+                           "value"     : bernoulli_limit,
+                           "subs"      : [bernoulli_poly,
+                                          bernoulli_exp]
+    },)
+
+    substituteFunctions(j_p,
+                        search_sub_function,
+                        "j_p[i]",
+                        sub_args = 
+                        (
+                            (Psi_k,   Psi_00), 
+                            (Psi_l,   Psi_p1),
+                            (Phi_p_k, Phi_p_00),
+                            (Phi_p_l, Phi_p_p1),
+                            (Ev_k,    Ev_00   ),
+                            (Ev_l,    Ev_p1),
+                            (Nv_k,    Nv_00),
+                            (Nv_l,    Nv_p1),
+                            (exp,     np_exp),
+                            (Abs,     np_abs)
+                        ),
+                        tabs = 2,
+                        do_simplify = 1
     )
-    print("\t \t else:")
-    print("\t \t \t j_p[i] = ", j_p.subs([(bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nv_k*exp(q*(Phi_p_k - Psi_k + (Ev_k + Ev_l)/2.)/(kB*T)),
-                                           bernoulli_exp(+(Psi_l-Psi_k)/(Ut)) * Nv_k*exp(q*(Phi_p_k - Psi_k + (Ev_k + Ev_l)/2.)/(kB*T))),
-                                          (bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nv_l*exp(q*(Phi_p_l - Psi_l + (Ev_k + Ev_l)/2.)/(kB*T)),
-                                           bernoulli_exp(-(Psi_l-Psi_k)/(Ut)) * Nv_l*exp(q*(Phi_p_l - Psi_l + (Ev_k + Ev_l)/2.)/(kB*T)))]).subs(([(Psi_k,   Psi_00),
-                                                                                                                                                  (Psi_l,   Psi_p1),
-                                                                                                                                                  (Phi_p_k, Phi_p_00),
-                                                                                                                                                  (Phi_p_l, Phi_p_p1),
-                                                                                                                                                  (Ev_k,    Ev_00   ),
-                                                                                                                                                  (Ev_l,    Ev_p1),
-                                                                                                                                                  (Nv_k,    Nv_00),
-                                                                                                                                                  (Nv_l,    Nv_p1),
-                                                                                                                                                  (exp,     np_exp)]))
-    )
+
+    
+
     print()
     print("\t i = parameters.n-1")
     print("\t j_p[i] =  j_p[i-1]")
@@ -376,34 +378,29 @@ def codeGenerator():
     print("\t j_n = np.zeros(parameters.n)")
     print()
     print("\t for i in range(0,parameters.n-1):")
-    print("\t \t if(np.abs(",(Psi_00-Psi_p1)/Ut," )<=", bernoulli_limit,"):")
-    print("\t \t \t j_n[i] = ", j_n.subs([(bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nc_k*exp(q*(Psi_k - Phi_n_k - (Ec_k + Ec_l)/2.)/(kB*T)),
-                                           bernoulli_poly(-(Psi_l-Psi_k)/(Ut)) * Nc_k*exp(q*(Psi_k - Phi_n_k - (Ec_k + Ec_l)/2.)/(kB*T))),
-                                          (bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nc_l*exp(q*(Psi_l - Phi_n_l - (Ec_k + Ec_l)/2.)/(kB*T)),
-                                           bernoulli_poly(+(Psi_l-Psi_k)/(Ut)) * Nc_l*exp(q*(Psi_l - Phi_n_l - (Ec_k + Ec_l)/2.)/(kB*T)))]).subs(([(Psi_k,   Psi_00),
-                                                                                                                                                   (Psi_l,   Psi_p1),
-                                                                                                                                                   (Phi_n_k, Phi_n_00),
-                                                                                                                                                   (Phi_n_l, Phi_n_p1),
-                                                                                                                                                   (Ec_k,    Ec_00   ),
-                                                                                                                                                   (Ec_l,    Ec_p1),
-                                                                                                                                                   (Nc_k,    Nc_00),
-                                                                                                                                                   (Nc_l,    Nc_p1),
-                                                                                                                                                   (exp,     np_exp)]))
+
+    substituteFunctions(j_n,
+                        search_sub_function,
+                        "j_n[i]",
+                        sub_args = 
+                        (
+                            (Psi_k,   Psi_00), 
+                            (Psi_l,   Psi_p1),
+                            (Phi_n_k, Phi_n_00),
+                            (Phi_n_l, Phi_n_p1),
+                            (Ec_k,    Ec_00   ),
+                            (Ec_l,    Ec_p1),
+                            (Nc_k,    Nc_00),
+                            (Nc_l,    Nc_p1),
+                            (exp,     np_exp),
+                            (Abs,     np_abs)
+                        ),
+                        tabs = 2,
+                        do_simplify = 1
     )
-    print("\t \t else:")
-    print("\t \t \t j_n[i] = ", j_n.subs([(bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nc_k*exp(q*(Psi_k - Phi_n_k - (Ec_k + Ec_l)/2.)/(kB*T)),
-                                           bernoulli_exp(-(Psi_l-Psi_k)/(Ut)) * Nc_k*exp(q*(Psi_k - Phi_n_k - (Ec_k + Ec_l)/2.)/(kB*T))),
-                                          (bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nc_l*exp(q*(Psi_l - Phi_n_l - (Ec_k + Ec_l)/2.)/(kB*T)),
-                                           bernoulli_exp(+(Psi_l-Psi_k)/(Ut)) * Nc_l*exp(q*(Psi_l - Phi_n_l - (Ec_k + Ec_l)/2.)/(kB*T)))]).subs(([(Psi_k,   Psi_00),
-                                                                                                                                                  (Psi_l,   Psi_p1),
-                                                                                                                                                  (Phi_n_k, Phi_n_00),
-                                                                                                                                                  (Phi_n_l, Phi_n_p1),
-                                                                                                                                                  (Ec_k,    Ec_00   ),
-                                                                                                                                                  (Ec_l,    Ec_p1),
-                                                                                                                                                  (Nc_k,    Nc_00),
-                                                                                                                                                  (Nc_l,    Nc_p1),
-                                                                                                                                                  (exp,     np_exp)]))
-    )
+
+
+
     print()
     print("\t i = parameters.n-1")
     print("\t j_n[i] =  j_n[i-1]")
@@ -468,27 +465,15 @@ def codeGenerator():
                           +","
                           +partial_derivative[0]
                           +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                          partial_derivative[1]).subs(substitutes[s])), ")")
+                          " = ... ")
                 else:
-                    
                     substituteFunctions(-function[1],
                                         search_sub_functions, 
                                         "parameters.A["+function[0]+","+partial_derivative[0]+"]",
                                         substitutes[s],
                                         partial_derivative = partial_derivative[1],
                                         tabs=4,
-                                        do_simplify = 0)
+                                        do_simplify = 1)
                                         
 
                     
@@ -585,119 +570,16 @@ def codeGenerator():
                           +","
                           +partial_derivative[0]
                           +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
+                          " = ..."
+                    )
                 else:
-                    # 
-                    # (Psi_00 - Psi_m1) <  bernoulli_limit
-                    # (Psi_p1 - Psi_00) <  bernoulli_limit
-                    #
-                    print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                          ") and  (np.abs("      , (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                          ")):")
-                    print("\t \t \t \t parameters.A["
-                          +function[0]
-                          +","
-                          +partial_derivative[0]
-                          +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
-
-                    # 
-                    # (Psi_00 - Psi_m1) >= bernoulli_limit
-                    # (Psi_p1 - Psi_00) <  bernoulli_limit
-                    #
-                    print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                          ") and  (np.abs("      , (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                          ")):")
-                    print("\t \t \t \t parameters.A["
-                          +function[0]
-                          +","
-                          +partial_derivative[0]
-                          +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_exp(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_exp(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_poly(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
-
-                    # 
-                    # (Psi_00 - Psi_m1) <  bernoulli_limit
-                    # (Psi_p1 - Psi_00) >= bernoulli_limit
-                    #
-                    print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") < ", bernoulli_limit,
-                          ") and  (np.abs("      , (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                          ")):")
-                    print("\t \t \t \t parameters.A["
-                          +function[0]
-                          +","
-                          +partial_derivative[0]
-                          +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_poly(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_exp(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_exp(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
-
-                    # 
-                    # (Psi_00 - Psi_m1) >= bernoulli_limit
-                    # (Psi_p1 - Psi_00) >= bernoulli_limit
-                    #
-                    print("\t \t \t if ((np.abs(", (Psi_00.subs(substitutes[s]) - Psi_m1.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                          ") and  (np.abs("      , (Psi_p1.subs(substitutes[s]) - Psi_00.subs(substitutes[s]))/Ut, ") >= ", bernoulli_limit,
-                          ")):")
-                    print("\t \t \t \t parameters.A["
-                          +function[0]
-                          +","
-                          +partial_derivative[0]
-                          +"]",
-                          " = -(",
-                          simplify(diff(function[1].subs(
-                              [(bernoulli(+(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_exp(+(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(-(Psi_00-Psi_m1)/Ut),
-                                (bernoulli_exp(-(Psi_00-Psi_m1)/Ut))),
-                               (bernoulli(+(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_exp(+(Psi_p1-Psi_00)/Ut))),
-                               (bernoulli(-(Psi_p1-Psi_00)/Ut),
-                                (bernoulli_exp(-(Psi_p1-Psi_00)/Ut)))
-                              ]),
-                               partial_derivative[1]).subs(substitutes[s])), ")")
-
+                    substituteFunctions(-function[1],
+                                        search_sub_functions, 
+                                        "parameters.A["+function[0]+","+partial_derivative[0]+"]",
+                                        substitutes[s],
+                                        partial_derivative = partial_derivative[1],
+                                        tabs=4,
+                                        do_simplify = 1)
 
     print()
     print("\t return ")
