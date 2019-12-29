@@ -56,7 +56,8 @@
     <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">a0</span><span class="p">)</span><span class="o">.</span><span class="n">argmin</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">idx</span></div>
 
-<div class="viewcode-block" id="solve_no_bias"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.solver.solve_no_bias">[docs]</a><span class="k">def</span> <span class="nf">solve_no_bias</span><span class="p">():</span>
+
+<div class="viewcode-block" id="solve_no_bias"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.solver.solve_no_bias">[docs]</a><span class="k">def</span> <span class="nf">solve_no_bias</span><span class="p">(</span><span class="n">norm_max</span> <span class="o">=</span> <span class="mf">1E-14</span><span class="p">):</span>
     
     <span class="n">parameters</span><span class="o">.</span><span class="n">init_potential</span><span class="p">()</span>
     
@@ -80,7 +81,8 @@
         <span class="c1">#print(&quot;Norm of b:&quot;)</span>
         <span class="c1">#print(norm)</span>
         
-        <span class="k">if</span> <span class="p">(</span><span class="n">norm</span> <span class="o">&lt;</span> <span class="mf">1.0E-14</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">norm</span> <span class="o">&lt;</span> <span class="n">norm_max</span><span class="p">):</span>
             <span class="k">break</span>
 
         
@@ -91,10 +93,9 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="solve_bias"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.solver.solve_bias">[docs]</a><span class="k">def</span> <span class="nf">solve_bias</span><span class="p">(</span><span class="n">Ua</span><span class="p">,</span> <span class="n">Ub</span><span class="p">):</span>
+<div class="viewcode-block" id="solve_bias"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.solver.solve_bias">[docs]</a><span class="k">def</span> <span class="nf">solve_bias</span><span class="p">(</span><span class="n">Ua</span><span class="p">,</span> <span class="n">Ub</span><span class="p">,</span> <span class="n">norm_max</span>  <span class="o">=</span> <span class="mf">1E-6</span><span class="p">):</span>
     
-    <span class="n">prev_norm</span> <span class="o">=</span> <span class="mf">1E30</span>
-    <span class="n">norm_max</span>  <span class="o">=</span> <span class="mf">1E-6</span>
+    <span class="c1">#prev_norm = 1E30</span>
     <span class="c1">#calc_recombination()     </span>
 
     <span class="n">counter</span> <span class="o">=</span> <span class="mi">0</span>
@@ -126,10 +127,13 @@
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;norm is nan&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">False</span>
 
-        <span class="k">if</span> <span class="p">((</span><span class="n">prev_norm</span> <span class="o">&lt;=</span> <span class="n">norm</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">norm</span> <span class="o">&lt;</span> <span class="n">norm_max</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">norm</span> <span class="o">&lt;</span> <span class="n">norm_max</span><span class="p">):</span>
             <span class="k">break</span>
+
+<span class="c1">#        if ((prev_norm &lt;= norm) and (norm &lt; norm_max)):</span>
+<span class="c1">#            break</span>
              
-        <span class="n">prev_norm</span> <span class="o">=</span> <span class="n">norm</span>
+<span class="c1">#        prev_norm = norm</span>
 
         <span class="n">counter</span> <span class="o">=</span> <span class="n">counter</span> <span class="o">+</span><span class="mi">1</span>
 
@@ -221,10 +225,12 @@
         <span class="n">parameters</span><span class="o">.</span><span class="n">u</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">u</span> <span class="o">+</span> <span class="n">parameters</span><span class="o">.</span><span class="n">x</span>
     
         <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
-        <span class="c1">#print(&quot;Norm of x:&quot;, norm)</span>
-       
         
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Norm: &quot;</span><span class="p">,</span><span class="n">norm</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Norm of b: &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">b</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Norm of x:&quot;</span> <span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">x</span><span class="p">))</span>
+        
+       
+    
 
         
         <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">norm</span><span class="p">)):</span>

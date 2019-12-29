@@ -40,7 +40,7 @@
             
   <h1>Source code for synumses.one_dimension.parameters</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Within this module all parameters are defines</span>
+<span class="sd">Within this module all parameters are defined</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
@@ -74,7 +74,8 @@
 <span class="c1"># *********************************************</span>
 <span class="c1">#  Limit for Bernoulli function epproximation</span>
 <span class="c1"># *********************************************</span>
-<span class="n">bernoulli_limit</span> <span class="o">=</span> <span class="mf">1E-4</span> <span class="c1"># Default 1E-4</span>
+
+<span class="n">bernoulli_limit</span> <span class="o">=</span> <span class="mf">1E1</span> <span class="c1"># Default 1E-4</span>
 
 
 <div class="viewcode-block" id="init_geometry"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.parameters.init_geometry">[docs]</a><span class="k">def</span> <span class="nf">init_geometry</span><span class="p">():</span>
@@ -174,8 +175,9 @@
 
         <span class="k">return</span> <span class="kc">None</span></div>
 
+
 <div class="viewcode-block" id="init_potential"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.parameters.init_potential">[docs]</a><span class="k">def</span> <span class="nf">init_potential</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">twoport.functions</span> <span class="k">import</span> <span class="n">ohm_potential</span>
+    <span class="kn">from</span> <span class="nn">synumses.one_dimension.functions</span> <span class="k">import</span> <span class="n">ohm_potential</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
             <span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ohm_potential</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Ec</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Ev</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Nc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Nv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
             <span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>

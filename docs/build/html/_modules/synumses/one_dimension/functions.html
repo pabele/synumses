@@ -52,18 +52,18 @@
 
 
 
-<div class="viewcode-block" id="hole_current_density"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.functions.hole_current_density">[docs]</a><span class="k">def</span> <span class="nf">hole_current_density</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">twoport.scharfetter_gummel_bernoulli</span> <span class="k">import</span> <span class="n">hole_current_density</span>
-        
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Use the function hole_current_density() direct from scharfetter_gummel_bernoulli !!&quot;</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">hole_current_density</span><span class="p">()</span></div>
+<span class="c1">#def hole_current_density():</span>
+<span class="c1">#    from synumses.one_dimension.scharfetter_gummel_bernoulli import hole_current_density</span>
+<span class="c1">#        </span>
+<span class="c1">#    print(&quot;Use the function hole_current_density() direct from scharfetter_gummel_bernoulli !!&quot;)</span>
+<span class="c1">#</span>
+<span class="c1">#    return hole_current_density()</span>
 
 
 <div class="viewcode-block" id="calc_n_density"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.functions.calc_n_density">[docs]</a><span class="k">def</span> <span class="nf">calc_n_density</span><span class="p">():</span>
 
-    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;potential.dat&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;fermi_2.dat&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">3</span><span class="p">])</span>
+    <span class="c1">#np.save(&quot;potential.dat&quot;, parameters.u[0::3])</span>
+    <span class="c1">#np.save(&quot;fermi_2.dat&quot;, parameters.u[2::3])</span>
 
     <span class="n">parameters</span><span class="o">.</span><span class="n">n_density</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="n">Nc</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">q</span><span class="o">*</span><span class="p">(</span> <span class="n">parameters</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="mi">0</span><span class="p">::</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">parameters</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="mi">2</span><span class="p">::</span><span class="mi">3</span><span class="p">]</span> <span class="o">-</span> <span class="n">parameters</span><span class="o">.</span><span class="n">Ec</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">parameters</span><span class="o">.</span><span class="n">kB</span><span class="o">*</span><span class="n">parameters</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
    
@@ -71,18 +71,18 @@
 
 
 
-<div class="viewcode-block" id="electron_current_density"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.functions.electron_current_density">[docs]</a><span class="k">def</span> <span class="nf">electron_current_density</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">twoport.scharfetter_gummel_bernoulli</span> <span class="k">import</span> <span class="n">electron_current_density</span>
-   
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Use the function electron_current_density() direct from scharfetter_gummel_bernoulli !!&quot;</span><span class="p">)</span>
-    
-    <span class="k">return</span> <span class="n">electron_current_density</span><span class="p">()</span></div>
+<span class="c1">#def electron_current_density():</span>
+<span class="c1">#   from  synumses.one_dimension.scharfetter_gummel_bernoulli import electron_current_density</span>
+<span class="c1">#   </span>
+<span class="c1">#    print(&quot;Use the function electron_current_density() direct from scharfetter_gummel_bernoulli !!&quot;)</span>
+<span class="c1">#    </span>
+<span class="c1">#    return electron_current_density()</span>
 
 
 
 <div class="viewcode-block" id="ohm_potential"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.functions.ohm_potential">[docs]</a><span class="k">def</span> <span class="nf">ohm_potential</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">Ec</span><span class="p">,</span> <span class="n">Ev</span><span class="p">,</span> <span class="n">Nc</span><span class="p">,</span> <span class="n">Nv</span><span class="p">):</span>
 
-    <span class="kn">from</span> <span class="nn">twoport.parameters</span> <span class="k">import</span> <span class="n">q</span><span class="p">,</span> <span class="n">kB</span><span class="p">,</span> <span class="n">Ut</span><span class="p">,</span> <span class="n">T</span>
+    <span class="kn">from</span> <span class="nn">synumses.one_dimension.parameters</span> <span class="k">import</span> <span class="n">q</span><span class="p">,</span> <span class="n">kB</span><span class="p">,</span> <span class="n">Ut</span><span class="p">,</span> <span class="n">T</span>
         
     <span class="n">ni</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Nc</span><span class="o">*</span><span class="n">Nv</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">Ec</span><span class="o">-</span><span class="n">Ev</span><span class="p">)</span><span class="o">*</span><span class="n">q</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">kB</span><span class="o">*</span><span class="n">T</span><span class="p">))</span>
     <span class="n">Phi</span> <span class="o">=</span> <span class="p">(</span><span class="n">Ec</span> <span class="o">+</span> <span class="n">Ev</span><span class="p">)</span><span class="o">/</span><span class="mf">2.</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">Ut</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">Nc</span><span class="o">/</span><span class="n">Nv</span><span class="p">)</span> <span class="o">+</span> <span class="n">Ut</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arcsinh</span><span class="p">(</span><span class="n">C</span><span class="o">/</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">ni</span><span class="p">))</span>
@@ -115,8 +115,8 @@
     <span class="n">calc_p_density</span><span class="p">()</span>
     <span class="n">calc_n_density</span><span class="p">()</span>
     <span class="c1">#calc_ni_density()</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;p_density.dat&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">.</span><span class="n">p_density</span><span class="p">)</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;n_density.dat&quot;</span><span class="p">,</span> <span class="n">parameters</span><span class="o">.</span><span class="n">n_density</span><span class="p">)</span>
+    <span class="c1">#np.save(&quot;p_density.dat&quot;, parameters.p_density)</span>
+    <span class="c1">#np.save(&quot;n_density.dat&quot;, parameters.n_density)</span>
     <span class="n">parameters</span><span class="o">.</span><span class="n">recombination</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">parameters</span><span class="o">.</span><span class="n">Cau</span>
         <span class="o">*</span>

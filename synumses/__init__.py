@@ -2,11 +2,7 @@
 SyNumSeS
 ========
 
-Synumses is as 
-
-
-It solves the basic semiconductor equation numerically.
-Hallo Petra
+Synumses is a 
 
 .. math::
   (a + b)^2 \sqrt

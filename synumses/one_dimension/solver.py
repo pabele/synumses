@@ -15,9 +15,20 @@ def find_nearest(a, a0):
     idx = np.abs(a - a0).argmin()
     return idx
 
-def solve_no_bias():
+
+def solve_from_doping():
     
-    parameters.init_potential()
+    for i in range(0,parameters.n):
+            parameters.u[3*i + 0] = ohm_potential(parameters.C[i], parameters.Ec[i], parameters.Ev[i], parameters.Nc[i], parameters.Nv[i])
+            parameters.u[3*i + 1] = 0.
+            parameters.u[3*i + 2] = 0.
+    return None
+
+
+
+def solve_no_bias(norm_max = 1E-14):
+    
+    solve_from_doping()
     
     while True:
 
@@ -39,21 +50,21 @@ def solve_no_bias():
         #print("Norm of b:")
         #print(norm)
         
-        if (norm < 1.0E-14):
+
+        if (norm < norm_max):
             break
 
         
-        calc_p_density()
-        calc_n_density()
+        #calc_p_density()
+        #calc_n_density()
        
         
     return True
 
 
-def solve_bias(Ua, Ub):
+def solve_bias(Ua, Ub, norm_max  = 1E-6):
     
-    prev_norm = 1E30
-    norm_max  = 1E-6
+    #prev_norm = 1E30
     #calc_recombination()     
 
     counter = 0
@@ -85,10 +96,13 @@ def solve_bias(Ua, Ub):
             print("norm is nan")
             return False
 
-        if ((prev_norm <= norm) and (norm < norm_max)):
+        if (norm < norm_max):
             break
+
+#        if ((prev_norm <= norm) and (norm < norm_max)):
+#            break
              
-        prev_norm = norm
+#        prev_norm = norm
 
         counter = counter +1
 
@@ -180,10 +194,12 @@ def solve_bias_center_boundary(Ua, Ub, Uc, Pos, doping):
         parameters.u = parameters.u + parameters.x
     
         norm = np.linalg.norm(parameters.x)
-        #print("Norm of x:", norm)
-       
         
-        print("Norm: ",norm)
+        print("Norm of b: ", np.linalg.norm(parameters.b))
+        print("Norm of x:" , np.linalg.norm(parameters.x))
+        
+       
+    
 
         
         if (np.isnan(norm)):

@@ -12,14 +12,14 @@ import time
 #
 # activate if simplify() is not to be used
 #
-def simplify(x):
-    return x
+#def simplify(x):
+#    return x
 
 def bernoulli_poly(expr):
     #return 1.0
-    return 1.0 - expr/2.0
+    #return 1.0 - expr/2.0
     #return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 
-    #return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 + expr**6/30240.0 
+    return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 + expr**6/30240.0 
     #return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 + expr**6/30240.0 - expr**8/1209600.0
     #return expr/(exp(expr) - 1)
 
@@ -210,9 +210,11 @@ def codeGenerator():
     # Defining for one cell
     #
 
-    #poisson = ((Psi_p1 - 2*Psi_00 + Psi_m1) + q / Epsilon * (C_00 + p -n)*dx**2).subs([(Psi_k, Psi_00),(Psi_l, Psi_p1),(Phi_p_k, Phi_p_00),(Phi_p_l,Phi_p_p1)])
-    poisson = ((Psi_p1 - 2*Psi_00 + Psi_m1) + q / Epsilon_00 * (C_00 + p -n)*dx**2)
+    #poisson = ((Psi_p1 - 2.*Psi_00 + Psi_m1) + q / Epsilon * (C_00 + p -n)*dx**2).subs([(Psi_k, Psi_00),(Psi_l, Psi_p1),(Phi_p_k, Phi_p_00),(Phi_p_l,Phi_p_p1)])
+    poisson = ((Psi_p1 - 2.*Psi_00 + Psi_m1) + q / Epsilon_00 * (C_00 + p - n)*dx**2)
+    
 
+    # 
     j_p =+(q*mu_p*Ut)/(dx)*(
         +bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nv_k*exp(q*(Phi_p_k - Psi_k + (Ev_k + Ev_l)/2.)/(kB*T))
         -bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nv_l*exp(q*(Phi_p_l - Psi_l + (Ev_k + Ev_l)/2.)/(kB*T))
@@ -222,6 +224,18 @@ def codeGenerator():
         +bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nc_k*exp(q*(Psi_k - Phi_n_k - (Ec_k + Ec_l)/2.)/(kB*T))
         -bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nc_l*exp(q*(Psi_l - Phi_n_l - (Ec_k + Ec_l)/2.)/(kB*T))
     )
+
+
+#    j_p =+(q*mu_p*Ut)/(dx)*(
+#        +bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nv_k*exp(q*(Phi_p_k - Psi_k + Ev_k)/(kB*T))
+#        -bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nv_l*exp(q*(Phi_p_l - Psi_l + Ev_l)/(kB*T))
+#    )
+#
+#    j_n = -(q*mu_n*Ut)/(dx)*(
+#        +bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nc_k*exp(q*(Psi_k - Phi_n_k - Ec_k)/(kB*T))
+#        -bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nc_l*exp(q*(Psi_l - Phi_n_l - Ec_l)/(kB*T))
+#    )
+
 
     div_j_p = (
         + j_p.subs([(Psi_k, Psi_00),(Psi_l, Psi_p1),(Phi_p_k, Phi_p_00),(Phi_p_l,Phi_p_p1),(Ev_k, Ev_00),(Ev_l, Ev_p1),(Nv_k, Nv_00),(Nv_l, Nv_p1)])
@@ -331,14 +345,15 @@ def codeGenerator():
     print()
     print("\t for i in range(0,parameters.n-1):")
 
-    search_sub_function = ({"function"  : bernoulli,
+    search_sub_function = ({"function" : bernoulli,
                            "if_expr"   : Abs,
-                           "if_states" : ['<=',
-                                          '> '],
+                           "if_states" : [' <= ',
+                                          ' >  '],
                            "value"     : bernoulli_limit,
                            "subs"      : [bernoulli_poly,
                                           bernoulli_exp]
     },)
+
 
     substituteFunctions(j_p,
                         search_sub_function,
@@ -359,8 +374,6 @@ def codeGenerator():
                         tabs = 2,
                         do_simplify = 1
     )
-
-    
 
     print()
     print("\t i = parameters.n-1")
@@ -415,8 +428,8 @@ def codeGenerator():
 
     search_sub_function = {"function"  : bernoulli,
                            "if_expr"   : Abs,
-                           "if_states" : ['<=',
-                                          '> '],
+                           "if_states" : [' <= ',
+                                          ' >  '],
                            "value"     : bernoulli_limit,
                            "subs"      : [bernoulli_poly,
                                           bernoulli_exp]}

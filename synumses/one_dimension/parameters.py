@@ -1,10 +1,44 @@
 """
-Within this module all parameters are defined
+Within this module all global variables and arrays are defined.
+It also defines the default device, a silicon pn junction.
+
+.. csv-table:: **global variables**
+   :header: "global variable", "meaning", "default value"
+   :widths: 10, 25, 10
+   
+   "T", "temperature", "300"
+   "q", "elementary charge", "1.6E-19"
+   "kB", "Boltzman constant",  "1.38E-23"
+   "Ut", "temperature voltage", "kB*T/q"
+   "Epsilon_0", "vacuum permittivity", "8.85E-12"
+   "Epsilon_r", "relative permittivity of silicon",  "11.6"
+   "n", "number of grid points", "400"
+   "lx", "length of device", "400E-9"
+   "bernoulli_limit", "for values < *bernoulli_limit* the bernoulli function is approximated by a polynom", "1E1"
+
+.. csv-table:: **global arrays**
+   :header: "global array", "meaning", "default value"
+   :widths: 10, 25, 10
+   
+   "pos_x", "position of grid point", "np.linspace(0,lx,n)"
+   "Ec", "energy of conduction band", "np.full(n, 1.12)"
+   "Nc", "effective density of states in conduction band", "np.full(n, 2.81E25)"
+   "Ev", "energy of valence band", "np.full(n, 0.0)"
+   "Nv", "effective density of states in valence band", "np.full(n, 1.83E25)"
+   "Epsilon", "permittivity of the material", "np.full(n, Epsilon_r * Epsilon_0)"
+   "mu_p", "hole mobility", "np.full(n, 0.045)"
+   "mu_n", "electron mobility", "np.full(n, 0.14)"
+   "C", "doping", "np.zeros(n)"
+   "Cau", "coefficient for recombination: q*(Cau*(n*p-ni2)-generation)*dx ", "np.full(n, 0)"
+   "generation", "generation: q*(Cau*(n*p-ni2)-generation)*dx", "np.full(n, 0.0)"
+   "b", ":math:`f(x)`", "np.zeros(3*n)"
+   "A", "jacobian matrix",  "sparse.lil_matrix((3*n, 3*n))"
+   "x", ":math:`\delta x`",  "np.zeros(3*n)"
+
 """
 
 
 import numpy as np
-
 
 import scipy.sparse as sparse 
 
@@ -34,12 +68,13 @@ lx = 400E-9
 #  Limit for Bernoulli function epproximation
 # *********************************************
 
-bernoulli_limit = 1E-4 # Default 1E-4
+bernoulli_limit = 1E1 # Default 1E-4
 
 
 def init_geometry():
         """
-        This function 
+        This functions sets grid size (dx) and the position of the gris points (pos_x).<br>
+        This function must be executed after changing the length (lx) of the number of grid points (n).    
         """
         
 
@@ -49,11 +84,11 @@ def init_geometry():
         global pos_x
         pos_x = np.linspace(0,lx,n)
 
-        # #########################
-        # material parameters for
-        #         silicon
-        # #########################
-
+def init_parameters():
+        """
+        This function defines the material parameters.
+        This function must be executed after ''init_geometry()''
+        """
         global Ec
         Ec = np.full(n, 1.12)
         global Nc
@@ -69,39 +104,22 @@ def init_geometry():
 
         global mu_p
         mu_p = np.full(n, 0.045)
+
         global mu_n
         mu_n = np.full(n, 0.14)
 
-        global tau_p
-        tau_p = np.full(n, 1E-9)
-        global tau_n
-        tau_n = np.full(n, 1E-9)
+        # Doping-Profile
+        global C
+        C = np.zeros(n)
 
         global Cau
         Cau = np.full(n, 0) # 1E-28
-
-        global p_density
-        p_density = np.zeros(n) 
-
-        global n_density
-        n_density = np.zeros(n) 
-
-
-
-        global recombination
-        recombination = np.full(n, 0.0)
         
         global generation
         generation = np.full(n, 0.0)
-
-
-        global  ni_density
-        ni_density = np.full(n, 0.0)
-
+ 
         global u
         u = np.zeros(3*n) 
-
-
 
         global b
         b = np.zeros(3*n)
@@ -112,18 +130,17 @@ def init_geometry():
         global x
         x = np.zeros(3*n)
 
-        # Doping-Profile
-        global C
-        C = np.zeros(n)
+        
 
-
-        # *****************
-        #    Definition
-        #   PN-Junction
-        # *****************
-
-        Nd = 1E24
+def init_default_doping():
+        """
+        Definition of the default doping.
+        Left part doped with  :math:`N_\mathrm{a} = 1 \cot 10^{24}\, \mathrm{m^3}` and
+        right part doped with :math:`N_\mathrm{d} = 1 \cot 10^{24}\, \mathrm{m^3}`
+        
+        """
         Na = 1E24
+        Nd = 1E24
 
         for i in range(0,n):
                 if i < n/2:
@@ -134,17 +151,9 @@ def init_geometry():
 
         return None
 
-def init_potential():
-    from twoport.functions import ohm_potential
-    for i in range(0,n):
-            u[3*i + 0] = ohm_potential(C[i], Ec[i], Ev[i], Nc[i], Nv[i])
-            u[3*i + 1] = 0.
-            u[3*i + 2] = 0.
-    return None
-
 
 
 init_geometry()
+init_parameters()
+init_default_doping()
 
-
-init_potential()

@@ -14,6 +14,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" /> 
@@ -69,16 +70,6 @@
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="synumses.one_dimension.functions.electron_current_density">
-<code class="descclassname">synumses.one_dimension.functions.</code><code class="descname">electron_current_density</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/functions.html#electron_current_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.functions.electron_current_density" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="synumses.one_dimension.functions.hole_current_density">
-<code class="descclassname">synumses.one_dimension.functions.</code><code class="descname">hole_current_density</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/functions.html#hole_current_density"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.functions.hole_current_density" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
 <dt id="synumses.one_dimension.functions.ohm_potential">
 <code class="descclassname">synumses.one_dimension.functions.</code><code class="descname">ohm_potential</code><span class="sig-paren">(</span><em>C</em>, <em>Ec</em>, <em>Ev</em>, <em>Nc</em>, <em>Nv</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/functions.html#ohm_potential"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.functions.ohm_potential" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
@@ -86,7 +77,7 @@
 </div>
 <div class="section" id="module-synumses.one_dimension.parameters">
 <span id="synumses-one-dimension-parameters-module"></span><h2>synumses.one_dimension.parameters module<a class="headerlink" href="#module-synumses.one_dimension.parameters" title="Permalink to this headline">¶</a></h2>
-<p>Within this module all parameters are defines</p>
+<p>Within this module all parameters are defined</p>
 <dl class="function">
 <dt id="synumses.one_dimension.parameters.init_geometry">
 <code class="descclassname">synumses.one_dimension.parameters.</code><code class="descname">init_geometry</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/parameters.html#init_geometry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.parameters.init_geometry" title="Permalink to this definition">¶</a></dt>
@@ -117,9 +108,16 @@
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="synumses.one_dimension.python_code_generator.simplify">
-<code class="descclassname">synumses.one_dimension.python_code_generator.</code><code class="descname">simplify</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/python_code_generator.html#simplify"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.python_code_generator.simplify" title="Permalink to this definition">¶</a></dt>
+<dt id="synumses.one_dimension.python_code_generator.makeUpdate_b">
+<code class="descclassname">synumses.one_dimension.python_code_generator.</code><code class="descname">makeUpdate_b</code><span class="sig-paren">(</span><em>name</em>, <em>functions</em>, <em>search_sub_functions</em>, <em>substitutes</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/python_code_generator.html#makeUpdate_b"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.python_code_generator.makeUpdate_b" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="function">
+<dt id="synumses.one_dimension.python_code_generator.substituteFunctions">
+<code class="descclassname">synumses.one_dimension.python_code_generator.</code><code class="descname">substituteFunctions</code><span class="sig-paren">(</span><em>function</em>, <em>sub_functions</em>, <em>left_side</em>, <em>sub_args=None</em>, <em>partial_derivative=None</em>, <em>tabs=0</em>, <em>do_simplify=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/python_code_generator.html#substituteFunctions"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.python_code_generator.substituteFunctions" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>function</em> is a sympy function which is analysed
+<em>sub_functions</em></p>
+</dd></dl>
 
 </div>
 <div class="section" id="module-synumses.one_dimension.scharfetter_gummel_bernoulli">
@@ -170,7 +168,7 @@
 
 <dl class="function">
 <dt id="synumses.one_dimension.solver.solve_bias">
-<code class="descclassname">synumses.one_dimension.solver.</code><code class="descname">solve_bias</code><span class="sig-paren">(</span><em>Ua</em>, <em>Ub</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/solver.html#solve_bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.solver.solve_bias" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">synumses.one_dimension.solver.</code><code class="descname">solve_bias</code><span class="sig-paren">(</span><em>Ua</em>, <em>Ub</em>, <em>norm_max=1e-06</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/solver.html#solve_bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.solver.solve_bias" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -180,7 +178,7 @@
 
 <dl class="function">
 <dt id="synumses.one_dimension.solver.solve_no_bias">
-<code class="descclassname">synumses.one_dimension.solver.</code><code class="descname">solve_no_bias</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/solver.html#solve_no_bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.solver.solve_no_bias" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">synumses.one_dimension.solver.</code><code class="descname">solve_no_bias</code><span class="sig-paren">(</span><em>norm_max=1e-14</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/synumses/one_dimension/solver.html#solve_no_bias"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#synumses.one_dimension.solver.solve_no_bias" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </div>
