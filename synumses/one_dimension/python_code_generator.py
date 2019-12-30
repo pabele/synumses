@@ -10,7 +10,7 @@ from sympy.parsing.sympy_parser import parse_expr
 import time
 
 #
-# activate if simplify() is not to be used
+#activate if simplify() is not to be used
 #
 #def simplify(x):
 #    return x

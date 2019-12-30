@@ -25,15 +25,10 @@ def calc_n_density():
     return n_density
 
 
-
-
-
-
 def ohm_potential(C, Ec, Ev, Nc, Nv):
    """
    Calculates the potential from the doping level, conduction band energy, valence band energy and density of states.
    """
-   
 
    from synumses.one_dimension.parameters import q, kB, Ut, T
    
