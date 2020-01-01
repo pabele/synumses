@@ -1,7 +1,7 @@
 synumses
-========
-
-.. toctree::
-   :maxdepth: 4
-
-   synumses
+-========
+-
+-.. toctree::
+-   :maxdepth: 4
+-
+-   synumses

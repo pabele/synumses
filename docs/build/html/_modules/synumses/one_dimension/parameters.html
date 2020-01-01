@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>synumses.one_dimension.parameters &#8212; Hauptseite</title>
+    <title>synumses.one_dimension.parameters &#8212; Main Page</title>
     <link rel="stylesheet" href="../../../_static/classic.css" type="text/css" />
     <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
     
@@ -28,7 +28,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Hauptseite</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Main Page</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
       </ul>
     </div>  
@@ -40,12 +40,46 @@
             
   <h1>Source code for synumses.one_dimension.parameters</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Within this module all parameters are defined</span>
+<span class="sd">Within this module all global variables and arrays are defined.</span>
+<span class="sd">It also defines the default device, a silicon pn junction.</span>
+
+<span class="sd">.. csv-table:: **global variables**</span>
+<span class="sd">   :header: &quot;global variable&quot;, &quot;meaning&quot;, &quot;default value&quot;</span>
+<span class="sd">   :widths: 10, 25, 10</span>
+<span class="sd">   </span>
+<span class="sd">   &quot;T&quot;, &quot;temperature&quot;, &quot;300&quot;</span>
+<span class="sd">   &quot;q&quot;, &quot;elementary charge :math:`q_\mathrm{e}`&quot;, &quot;1.6E-19&quot;</span>
+<span class="sd">   &quot;kB&quot;, &quot;Boltzman constant :math:`k_\mathrm{B}`&quot;,  &quot;1.38E-23&quot;</span>
+<span class="sd">   &quot;Ut&quot;, &quot;temperature voltage :math:`U_\mathrm{T}`&quot;, &quot;kB*T/q&quot;</span>
+<span class="sd">   &quot;Epsilon_0&quot;, &quot;vacuum permittivity :math:`\epsilon_0`&quot;, &quot;8.85E-12&quot;</span>
+<span class="sd">   &quot;Epsilon_r&quot;, &quot;relative permittivity of silicon :math:`\epsilon_\mathrm{r}`&quot;,  &quot;11.6&quot;</span>
+<span class="sd">   &quot;n&quot;, &quot;number of grid points&quot;, &quot;400&quot;</span>
+<span class="sd">   &quot;lx&quot;, &quot;length of device&quot;, &quot;400E-9&quot;</span>
+<span class="sd">   &quot;bernoulli_limit&quot;, &quot;for values less then **bernoulli_limit** the bernoulli function is approximated by a polynom&quot;, &quot;1E1&quot;</span>
+
+<span class="sd">.. csv-table:: **global arrays**</span>
+<span class="sd">   :header: &quot;global array&quot;, &quot;meaning&quot;, &quot;default value&quot;</span>
+<span class="sd">   :widths: 10, 25, 10</span>
+<span class="sd">   </span>
+<span class="sd">   &quot;pos_x&quot;, &quot;position of grid point&quot;, &quot;np.linspace(0,lx,n)&quot;</span>
+<span class="sd">   &quot;Ec&quot;, &quot;energy of conduction band&quot;, &quot;np.full(n, 1.12)&quot;</span>
+<span class="sd">   &quot;Nc&quot;, &quot;effective density of states in conduction band&quot;, &quot;np.full(n, 2.81E25)&quot;</span>
+<span class="sd">   &quot;Ev&quot;, &quot;energy of valence band&quot;, &quot;np.full(n, 0.0)&quot;</span>
+<span class="sd">   &quot;Nv&quot;, &quot;effective density of states in valence band&quot;, &quot;np.full(n, 1.83E25)&quot;</span>
+<span class="sd">   &quot;Epsilon&quot;, &quot;permittivity of the material&quot;, &quot;np.full(n, Epsilon_r * Epsilon_0)&quot;</span>
+<span class="sd">   &quot;mu_p&quot;, &quot;hole mobility :math:`\mu_\mathrm{p}`&quot;, &quot;np.full(n, 0.045)&quot;</span>
+<span class="sd">   &quot;mu_n&quot;, &quot;electron mobility :math:`\mu_\mathrm{n}`&quot;, &quot;np.full(n, 0.14)&quot;</span>
+<span class="sd">   &quot;C&quot;, &quot;doping&quot;, &quot;np.zeros(n)&quot;</span>
+<span class="sd">   &quot;Cau&quot;, &quot;coefficient for recombination: q*(Cau*(n*p-ni2)-generation)*dx &quot;, &quot;np.full(n, 0)&quot;</span>
+<span class="sd">   &quot;generation&quot;, &quot;generation: q*(Cau*(n*p-ni2)-generation)*dx&quot;, &quot;np.full(n, 0.0)&quot;</span>
+<span class="sd">   &quot;b&quot;, &quot;:math:`f(x)`&quot;, &quot;np.zeros(3*n)&quot;</span>
+<span class="sd">   &quot;A&quot;, &quot;jacobian matrix&quot;,  &quot;sparse.lil_matrix((3*n, 3*n))&quot;</span>
+<span class="sd">   &quot;x&quot;, &quot;:math:`\delta x`&quot;,  &quot;np.zeros(3*n)&quot;</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
 
 <span class="kn">import</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sparse</span> 
 
@@ -80,7 +114,8 @@
 
 <div class="viewcode-block" id="init_geometry"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.parameters.init_geometry">[docs]</a><span class="k">def</span> <span class="nf">init_geometry</span><span class="p">():</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        This function </span>
+<span class="sd">        This functions sets grid size (**dx**) and the position of the gris points (**pos_x**).</span>
+<span class="sd">        This function must be executed after changing the length (**lx**) of the number of grid points (**n**).    </span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
 
@@ -88,20 +123,23 @@
         <span class="n">dx</span> <span class="o">=</span> <span class="n">lx</span><span class="o">/</span><span class="n">n</span>
 
         <span class="k">global</span> <span class="n">pos_x</span>
-        <span class="n">pos_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">lx</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">pos_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">lx</span><span class="p">,</span><span class="n">n</span><span class="p">)</span></div>
 
-        <span class="c1"># #########################</span>
-        <span class="c1"># material parameters for</span>
-        <span class="c1">#         silicon</span>
-        <span class="c1"># #########################</span>
+<div class="viewcode-block" id="init_parameters"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.parameters.init_parameters">[docs]</a><span class="k">def</span> <span class="nf">init_parameters</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This function defines the material parameters for silicon.</span>
+<span class="sd">        After executing this function the parameters can be altered.</span>
+<span class="sd">        This function must be executed after **init_geometry()**</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">global</span> <span class="n">Chi</span>
+        <span class="n">Chi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">4.05</span><span class="p">)</span>
 
-        <span class="k">global</span> <span class="n">Ec</span>
-        <span class="n">Ec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.12</span><span class="p">)</span>
+        <span class="k">global</span> <span class="n">Eg</span>
+        <span class="n">Eg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.12</span><span class="p">)</span>
+        
         <span class="k">global</span> <span class="n">Nc</span>
         <span class="n">Nc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">2.81E25</span><span class="p">)</span>
 
-        <span class="k">global</span> <span class="n">Ev</span>
-        <span class="n">Ev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
         <span class="k">global</span> <span class="n">Nv</span>
         <span class="n">Nv</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.83E25</span><span class="p">)</span>
 
@@ -110,39 +148,22 @@
 
         <span class="k">global</span> <span class="n">mu_p</span>
         <span class="n">mu_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">0.045</span><span class="p">)</span>
+
         <span class="k">global</span> <span class="n">mu_n</span>
         <span class="n">mu_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">0.14</span><span class="p">)</span>
 
-        <span class="k">global</span> <span class="n">tau_p</span>
-        <span class="n">tau_p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1E-9</span><span class="p">)</span>
-        <span class="k">global</span> <span class="n">tau_n</span>
-        <span class="n">tau_n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1E-9</span><span class="p">)</span>
+        <span class="c1"># Doping-Profile</span>
+        <span class="k">global</span> <span class="n">C</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 
         <span class="k">global</span> <span class="n">Cau</span>
         <span class="n">Cau</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># 1E-28</span>
-
-        <span class="k">global</span> <span class="n">p_density</span>
-        <span class="n">p_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> 
-
-        <span class="k">global</span> <span class="n">n_density</span>
-        <span class="n">n_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> 
-
-
-
-        <span class="k">global</span> <span class="n">recombination</span>
-        <span class="n">recombination</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
         
         <span class="k">global</span> <span class="n">generation</span>
         <span class="n">generation</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-
-
-        <span class="k">global</span>  <span class="n">ni_density</span>
-        <span class="n">ni_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-
+ 
         <span class="k">global</span> <span class="n">u</span>
         <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="p">)</span> 
-
-
 
         <span class="k">global</span> <span class="n">b</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
@@ -151,20 +172,19 @@
 
         <span class="c1"># Variables to be solved</span>
         <span class="k">global</span> <span class="n">x</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="o">*</span><span class="n">n</span><span class="p">)</span></div>
 
-        <span class="c1"># Doping-Profile</span>
-        <span class="k">global</span> <span class="n">C</span>
-        <span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        
 
-
-        <span class="c1"># *****************</span>
-        <span class="c1">#    Definition</span>
-        <span class="c1">#   PN-Junction</span>
-        <span class="c1"># *****************</span>
-
-        <span class="n">Nd</span> <span class="o">=</span> <span class="mf">1E24</span>
+<div class="viewcode-block" id="init_default_doping"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.parameters.init_default_doping">[docs]</a><span class="k">def</span> <span class="nf">init_default_doping</span><span class="p">():</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Definition of the default doping level.</span>
+<span class="sd">        Left part doped with  :math:`N_\mathrm{a} = 1 \cdot 10^{24}\, \mathrm{m^{-3}}` and</span>
+<span class="sd">        right part doped with :math:`N_\mathrm{d} = 1 \cdot 10^{24}\, \mathrm{m^{-3}}`</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">Na</span> <span class="o">=</span> <span class="mf">1E24</span>
+        <span class="n">Nd</span> <span class="o">=</span> <span class="mf">1E24</span>
 
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">:</span>
@@ -176,20 +196,11 @@
         <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="init_potential"><a class="viewcode-back" href="../../../synumses.one_dimension.html#synumses.one_dimension.parameters.init_potential">[docs]</a><span class="k">def</span> <span class="nf">init_potential</span><span class="p">():</span>
-    <span class="kn">from</span> <span class="nn">synumses.one_dimension.functions</span> <span class="k">import</span> <span class="n">ohm_potential</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
-            <span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">ohm_potential</span><span class="p">(</span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Ec</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Ev</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Nc</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Nv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
-            <span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
-            <span class="n">u</span><span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.</span>
-    <span class="k">return</span> <span class="kc">None</span></div>
-
-
 
 <span class="n">init_geometry</span><span class="p">()</span>
+<span class="n">init_parameters</span><span class="p">()</span>
+<span class="n">init_default_doping</span><span class="p">()</span>
 
-
-<span class="n">init_potential</span><span class="p">()</span>
 </pre></div>
 
           </div>
@@ -225,7 +236,7 @@
         <li class="right" >
           <a href="../../../py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="../../../index.html">Hauptseite</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">Main Page</a> &#187;</li>
           <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
       </ul>
     </div>

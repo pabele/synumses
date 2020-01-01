@@ -7,14 +7,14 @@ It also defines the default device, a silicon pn junction.
    :widths: 10, 25, 10
    
    "T", "temperature", "300"
-   "q", "elementary charge", "1.6E-19"
-   "kB", "Boltzman constant",  "1.38E-23"
-   "Ut", "temperature voltage", "kB*T/q"
-   "Epsilon_0", "vacuum permittivity", "8.85E-12"
-   "Epsilon_r", "relative permittivity of silicon",  "11.6"
+   "q", "elementary charge :math:`q_\mathrm{e}`", "1.6E-19"
+   "kB", "Boltzman constant :math:`k_\mathrm{B}`",  "1.38E-23"
+   "Ut", "temperature voltage :math:`U_\mathrm{T}`", "kB*T/q"
+   "Epsilon_0", "vacuum permittivity :math:`\epsilon_0`", "8.85E-12"
+   "Epsilon_r", "relative permittivity of silicon :math:`\epsilon_\mathrm{r}`",  "11.6"
    "n", "number of grid points", "400"
    "lx", "length of device", "400E-9"
-   "bernoulli_limit", "for values < *bernoulli_limit* the bernoulli function is approximated by a polynom", "1E1"
+   "bernoulli_limit", "for values less then **bernoulli_limit** the bernoulli function is approximated by a polynom", "1E1"
 
 .. csv-table:: **global arrays**
    :header: "global array", "meaning", "default value"
@@ -26,8 +26,8 @@ It also defines the default device, a silicon pn junction.
    "Ev", "energy of valence band", "np.full(n, 0.0)"
    "Nv", "effective density of states in valence band", "np.full(n, 1.83E25)"
    "Epsilon", "permittivity of the material", "np.full(n, Epsilon_r * Epsilon_0)"
-   "mu_p", "hole mobility", "np.full(n, 0.045)"
-   "mu_n", "electron mobility", "np.full(n, 0.14)"
+   "mu_p", "hole mobility :math:`\mu_\mathrm{p}`", "np.full(n, 0.045)"
+   "mu_n", "electron mobility :math:`\mu_\mathrm{n}`", "np.full(n, 0.14)"
    "C", "doping", "np.zeros(n)"
    "Cau", "coefficient for recombination: q*(Cau*(n*p-ni2)-generation)*dx ", "np.full(n, 0)"
    "generation", "generation: q*(Cau*(n*p-ni2)-generation)*dx", "np.full(n, 0.0)"
@@ -73,8 +73,8 @@ bernoulli_limit = 1E1 # Default 1E-4
 
 def init_geometry():
         """
-        This functions sets grid size (dx) and the position of the gris points (pos_x).<br>
-        This function must be executed after changing the length (lx) of the number of grid points (n).    
+        This functions sets grid size (**dx**) and the position of the gris points (**pos_x**).
+        This function must be executed after changing the length (**lx**) of the number of grid points (**n**).    
         """
         
 
@@ -86,16 +86,19 @@ def init_geometry():
 
 def init_parameters():
         """
-        This function defines the material parameters.
-        This function must be executed after ''init_geometry()''
+        This function defines the material parameters for silicon.
+        After executing this function the parameters can be altered.
+        This function must be executed after **init_geometry()**
         """
-        global Ec
-        Ec = np.full(n, 1.12)
+        global Chi
+        Chi = np.full(n, 4.05)
+
+        global Eg
+        Eg = np.full(n, 1.12)
+        
         global Nc
         Nc = np.full(n, 2.81E25)
 
-        global Ev
-        Ev = np.full(n, 0.0)
         global Nv
         Nv = np.full(n, 1.83E25)
 
@@ -134,9 +137,9 @@ def init_parameters():
 
 def init_default_doping():
         """
-        Definition of the default doping.
-        Left part doped with  :math:`N_\mathrm{a} = 1 \cot 10^{24}\, \mathrm{m^3}` and
-        right part doped with :math:`N_\mathrm{d} = 1 \cot 10^{24}\, \mathrm{m^3}`
+        Definition of the default doping level.
+        Left part doped with  :math:`N_\mathrm{a} = 1 \cdot 10^{24}\, \mathrm{m^{-3}}` and
+        right part doped with :math:`N_\mathrm{d} = 1 \cdot 10^{24}\, \mathrm{m^{-3}}`
         
         """
         Na = 1E24

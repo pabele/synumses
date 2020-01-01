@@ -196,4 +196,4 @@ todo_include_todos = True
 
 html_theme = "classic"
 html_logo = "./fig/DSC00854.JPG"
-html_title ="Hauptseite"
+html_title ="Main Page"

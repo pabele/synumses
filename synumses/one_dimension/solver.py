@@ -19,7 +19,7 @@ def find_nearest(a, a0):
 def solve_from_doping():
     
     for i in range(0,parameters.n):
-            parameters.u[3*i + 0] = ohm_potential(parameters.C[i], parameters.Ec[i], parameters.Ev[i], parameters.Nc[i], parameters.Nv[i])
+            parameters.u[3*i + 0] = ohm_potential(parameters.C[i], parameters.Chi[i], parameters.Eg[i], parameters.Nc[i], parameters.Nv[i])
             parameters.u[3*i + 1] = 0.
             parameters.u[3*i + 2] = 0.
     return None
@@ -132,8 +132,8 @@ def solve_bias_center_boundary(Ua, Ub, Uc, Pos, doping):
         # Boundary condition for potential
         #
         parameters.b[3*(base_pos+0)+0] =  ohm_potential(parameters.C[base_pos],
-                                                        parameters.Ec[base_pos],
-                                                        parameters.Ev[base_pos],
+                                                        parameters.Chi[base_pos],
+                                                        parameters.Eg[base_pos],
                                                         parameters.Nc[base_pos],
                                                         parameters.Nv[base_pos]) + Uc - parameters.u[3*(base_pos+0)+0] 
 

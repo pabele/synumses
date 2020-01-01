@@ -11,4 +11,5 @@ Synumses is a
 """
 
 
-import synumses.one_dimension
+#import synumses.one_dimension
+from .one_dimension import *
