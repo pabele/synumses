@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: synumses-pkg-pabele
-Version: 0.54
+Version: 0.56
 Summary: Numerical simulation package for semiconductor devices
 Home-page: UNKNOWN
 Author: Peter Abele
@@ -20,7 +20,6 @@ Platform: UNKNOWN
 Classifier: Development Status :: 3 - Alpha
 Classifier: Programming Language :: Python :: 3.7
 Classifier: License :: OSI Approved :: MIT License
-Classifier: Operating System :: OS Independent
 Classifier: Topic :: Scientific/Engineering
 Classifier: Topic :: Scientific/Engineering :: Physics
 Requires-Python: >=3.7
