@@ -121,15 +121,19 @@ def init_parameters():
         global generation
         generation = np.full(n, 0.0)
  
+        #
         global u
         u = np.zeros(3*n) 
 
+        # 
         global b
         b = np.zeros(3*n)
+
+        # 
         global A
         A = sparse.lil_matrix((3*n, 3*n))
 
-        # Variables to be solved
+        # Vector dx to be solved
         global x
         x = np.zeros(3*n)
 

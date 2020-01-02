@@ -1,7 +1,9 @@
 """
 This module generates the python code for the
 module **scharfetter_gummel_bernoulli.py**.
-It uses the *Van Roosbroeck equations*.
+It solves the *Van Roosbroeck equations* using the 
+*Scharfetter Gummel Scheme*.
+
 """
 
 from sympy import symbols, Symbol 

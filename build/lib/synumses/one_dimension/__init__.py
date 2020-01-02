@@ -1,3 +1,7 @@
+"""
+This module contains the submodules solve one dimensional electronic devices.
+"""
+
 from .parameters import *
 from .functions import *
 from .solver import *

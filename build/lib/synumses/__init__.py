@@ -2,17 +2,12 @@
 SyNumSeS
 ========
 
-Synumses is as 
-
-
-It solves the basic semiconductor equation numerically.
-Hallo Petra
-
-.. math::
-  (a + b)^2 \sqrt
-  \int
+SyNumSeS is a Python package for simulating various semiconductor devices
+in one dimension.
+It solves the the *Van Roosbroeck equations* using the *Scharfetter Gummel Discretization*.
 
 """
 
 
-import synumses.one_dimension
+#import synumses.one_dimension
+from .one_dimension import *

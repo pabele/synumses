@@ -1,101 +1,76 @@
-import numpy as np
+"""
+Some usefull function.
+"""
 
+import numpy as np
 import synumses.one_dimension.parameters as parameters
 
 
 def calc_p_density():
-    
-    parameters.p_density = parameters.Nv*np.exp(parameters.q*( parameters.u[1::3] - parameters.u[0::3] + parameters.Ev)/(parameters.kB*parameters.T))
+    """
+    Calculates and returns an array of the hole density.
+    """
+    p_density = parameters.Nv*np.exp(parameters.q*( parameters.u[1::3] - parameters.u[0::3] - parameters.Chi - parameters.Eg)/(parameters.kB*parameters.T))
           
-    return None
+    return p_density
 
-
-
-def hole_current_density():
-    from twoport.scharfetter_gummel_bernoulli import hole_current_density
-        
-    print("Use the function hole_current_density() direct from scharfetter_gummel_bernoulli !!")
-
-    return hole_current_density()
 
 
 def calc_n_density():
+    """
+    Calculates and returns an array of the electron density.
+    """
+    n_density = parameters.Nc*np.exp(parameters.q*( parameters.u[0::3] - parameters.u[2::3] + parameters.Chi)/(parameters.kB*parameters.T))
+    
+    return n_density
 
-    np.save("potential.dat", parameters.u[0::3])
-    np.save("fermi_2.dat", parameters.u[2::3])
 
-    parameters.n_density = parameters.Nc*np.exp(parameters.q*( parameters.u[0::3] - parameters.u[2::3] - parameters.Ec)/(parameters.kB*parameters.T))
+def ohm_potential(C, Chi, Eg, Nc, Nv):
+   """
+   Calculates ans returns the potential from the doping level, the electron affinity, the band gap, and the density of states.
+   """
+
+   from synumses.one_dimension.parameters import q, kB, Ut, T
    
-    return None
-
-
-
-def electron_current_density():
-    from twoport.scharfetter_gummel_bernoulli import electron_current_density
-   
-    print("Use the function electron_current_density() direct from scharfetter_gummel_bernoulli !!")
+   ni = np.sqrt(Nc*Nv)*np.exp(-((Eg)*q)/(2.*kB*T))
+   Phi = -Chi - Eg/2. - 0.5*Ut*np.log(Nc/Nv) + Ut*np.arcsinh(C/(2.*ni))
     
-    return electron_current_density()
-
-
-
-def ohm_potential(C, Ec, Ev, Nc, Nv):
-
-    from twoport.parameters import q, kB, Ut, T
-        
-    ni = np.sqrt(Nc*Nv)*np.exp(-((Ec-Ev)*q)/(2.*kB*T))
-    Phi = (Ec + Ev)/2. - 0.5*Ut*np.log(Nc/Nv) + Ut*np.arcsinh(C/(2.*ni))
-    #print(Phi)
-    
-    #if (C > 0):
-    #    Phi = Ut*np.log((np.sqrt(C**2 + 4.*ni**2)+C)/(2.*ni))
-    #else:
-    #    Phi = -Ut*np.log((np.sqrt(C**2 + 4.*ni**2)-C)/(2.*ni))
-    # 
-    #print(Phi)
-    
-    return(Phi)
+   return(Phi)
 
 
 def calc_ni_density():
+   """
+    Calculates and returns an array of the intrinsic carrier density.
+    """
+   ni_density = (
+      np.sqrt(parameters.Nc*parameters.Nv)
+      *
+      np.exp(-((parameters.Eg)*parameters.q)
+             /
+             (2.*parameters.kB*parameters.T))
+   )
 
-    parameters.ni_density = (
-        np.sqrt(parameters.Nc*parameters.Nv)
-        *
-        np.exp(-((parameters.Ec-parameters.Ev)*parameters.q)
-               /
-               (2.*parameters.kB*parameters.T))
-    )
-
-    return None
+   return ni_density
 
 def calc_recombination():
+   """
+   Calculates  and returns an array of the recombination rate.
+   
+   """
+   recombination = (
+      parameters.Cau
+      *
+      (calc_p_density() * calc_n_density() -
+       calc_ni_density()**2
+      )
+   )
     
-    calc_p_density()
-    calc_n_density()
-    #calc_ni_density()
-    np.save("p_density.dat", parameters.p_density)
-    np.save("n_density.dat", parameters.n_density)
-    parameters.recombination = (
-        parameters.Cau
-        *
-        (parameters.p_density * parameters.n_density -
-         parameters.ni_density**2
-        )
-    )
-    
-#    parameters.recombination = (
-#        (parameters.p_density * parameters.n_density -
-#         parameters.ni_density**2
-#        )
-#        /
-#        (parameters.tau_p*parameters.p_density + 
-#         parameters.tau_n*parameters.n_density)
-#    )
-
-    return None
+   return recombination
 
 def calc_generation(I_0, alpha):
-    
-    return None
+   """
+   Does nothing so far.
+   """
+   
+   return None
     

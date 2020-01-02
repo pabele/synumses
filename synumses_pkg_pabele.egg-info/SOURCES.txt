@@ -1,4 +1,4 @@
-README.md
+README.rst
 setup.py
 synumses/__init__.py
 synumses/one_dimension/__init__.py
@@ -6,6 +6,12 @@ synumses/one_dimension/functions.py
 synumses/one_dimension/parameters.py
 synumses/one_dimension/python_code_generator.py
 synumses/one_dimension/scharfetter_gummel_bernoulli.py
+synumses/one_dimension/scharfetter_gummel_bernoulli_new.py
+synumses/one_dimension/scharfetter_gummel_bernoulli_p4_no_simplify.py
+synumses/one_dimension/scharfetter_gummel_bernoulli_p4_simplify.py
+synumses/one_dimension/scharfetter_gummel_bernoulli_p6_mean_simplify.py
+synumses/one_dimension/scharfetter_gummel_bernoulli_p6_no_simplify.py
+synumses/one_dimension/scharfetter_gummel_bernoulli_p6_simplify.py
 synumses/one_dimension/solver.py
 synumses_pkg_pabele.egg-info/PKG-INFO
 synumses_pkg_pabele.egg-info/SOURCES.txt

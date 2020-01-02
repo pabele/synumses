@@ -2,11 +2,9 @@
 SyNumSeS
 ========
 
-Synumses is a 
-
-.. math::
-  (a + b)^2 \sqrt
-  \int
+SyNumSeS is a Python package for simulating various semiconductor devices
+in one dimension.
+It solves the the *Van Roosbroeck equations* using the *Scharfetter Gummel Discretization*.
 
 """
 
