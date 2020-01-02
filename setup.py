@@ -1,11 +1,11 @@
 import setuptools
 
-with open("README.md", "r") as fh:
+with open("DESCRIPTION.md", "r") as fh:
     long_description = fh.read()
 
 
 setuptools.setup(name='synumses-pkg-pabele',
-                 version='0.55',
+                 version='0.56',
                  description='Numerical simulation package for semiconductor devices',
                  long_description=long_description,
                  long_description_content_type="text/markdown",
