@@ -5,7 +5,7 @@ with open("DESCRIPTION.md", "r") as fh:
 
 
 setuptools.setup(name='synumses-pkg-pabele',
-                 version='0.56',
+                 version='0.57',
                  description='Numerical simulation package for semiconductor devices',
                  long_description=long_description,
                  long_description_content_type="text/markdown",
@@ -22,4 +22,10 @@ setuptools.setup(name='synumses-pkg-pabele',
                      "Topic :: Scientific/Engineering :: Physics"
                  ],
                  python_requires='>=3.7',
+                 install_requires=[
+                     'sympy',
+                     'scipy',
+                     'numpy',
+                 ]
+
 )

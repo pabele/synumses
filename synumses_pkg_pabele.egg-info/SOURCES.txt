@@ -16,4 +16,5 @@ synumses/one_dimension/solver.py
 synumses_pkg_pabele.egg-info/PKG-INFO
 synumses_pkg_pabele.egg-info/SOURCES.txt
 synumses_pkg_pabele.egg-info/dependency_links.txt
+synumses_pkg_pabele.egg-info/requires.txt
 synumses_pkg_pabele.egg-info/top_level.txt

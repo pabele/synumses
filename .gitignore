@@ -1,7 +1,7 @@
 *.png
 *.gif
 
-docs/build
+docs/build/**
 examples/**/test
 
 synumses/one_dimension/scharfetter_gummel_bernoulli_*.py
