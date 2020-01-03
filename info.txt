@@ -28,7 +28,7 @@ make html
 git remote add origin  https://github.com/pabele/synumses.git
 git push origin master
 
-
+git clone 
 
 commit f79216fdfbdbbdf1ea7e44c0da3f2b2cf0fa4ba9
 Author: Peter Abele <ppabele@web.de>

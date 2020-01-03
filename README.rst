@@ -80,7 +80,7 @@ Or clone this repository if you want do do changes::
 
 and::
 
-  pip install -i synumses
+  pip install -e synumses
 
 
 Examples
@@ -88,4 +88,4 @@ Examples
 
 The best way to get started is to have a look at the
 **JupyterLab** examples https://github.com/pabele/synumses/tree/master/examples/jupyter.
-
+or in *synumses/examples/jupyter*.
