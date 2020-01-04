@@ -62,19 +62,19 @@ Open the file *synumses/docs/build/html/index.html* in a browser.
 Installation
 ------------
 
-It is recommended to use **Anaconda  Python 3.7 version** https://www.anaconda.com/distribution
-,use this link for download,
-and install **JupyterLab** https://github.com/jupyterlab/jupyterlab with ::
+It is recommended to use **Anaconda  Python 3.7 version** https://www.anaconda.com/distribution,
+use this link for download,
+and install **JupyterLab** https://github.com/jupyterlab/jupyterlab with::
   
   conda install -c conda-forge jupyterlab
 
 
-Installation of SyNumSeS with python 3.7::
+Installation of **SyNumSeS** with python 3.7::
 
-  python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps synumses-pkg-pabele
+  python3 -m pip install synumses-pkg-pabele
 
 
-Or clone this repository if you want do do changes::
+Or clone this repository if you want to do changes::
 
   git clone https://github.com/pabele/synumses.git
 
@@ -88,4 +88,6 @@ Examples
 
 The best way to get started is to have a look at the
 **JupyterLab** examples https://github.com/pabele/synumses/tree/master/examples/jupyter.
-or in *synumses/examples/jupyter*.
+or in the folder *synumses/examples/jupyter/*.
+
+Some Python scripts can be found in *synumses/examples/*
