@@ -1,7 +1,16 @@
+
+# No generated graphics
 *.png
 *.gif
+
+# Python
+*.py[cod]
 
 docs/build/**
 examples/**/test
 
+# Different variatons of generated code
 synumses/one_dimension/scharfetter_gummel_bernoulli_*.py
+
+# Jupyter Lab
+.ipynb_checkpoints

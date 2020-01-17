@@ -7,3 +7,6 @@ You can simulate:
 - MOS-diodes
 - bipolar transistors
 - solar cells
+
+It can be cloned from:
+<https://github.com/pabele/synumses>

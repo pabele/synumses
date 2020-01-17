@@ -4,6 +4,7 @@ module **scharfetter_gummel_bernoulli.py**.
 It solves the *Van Roosbroeck equations* using the 
 *Scharfetter Gummel Scheme*.
 
+It uses the SymPy module to generate the Jacobian matrix.
 """
 
 from sympy import symbols, Symbol 
@@ -33,6 +34,7 @@ def bernoulli_poly(expr):
     return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 + expr**6/30240.0 
     #return 1.0 - expr/2.0 + expr**2/12.0 - expr**4/720.0 + expr**6/30240.0 - expr**8/1209600.0
     #return expr/(exp(expr) - 1)
+
 
 def bernoulli_exp(expr):
     """
@@ -65,7 +67,7 @@ def substituteFunctions(function, sub_functions, left_side, sub_args = None, par
 
             if  partial_derivative is not None:
                 if (do_simplify):
-                    print(simplify(diff(function, partial_derivative)).subs(sub_args))
+                    print(simplify(diff(simplify(function), partial_derivative)).subs(sub_args))
                 else:
                     print(diff(function, partial_derivative).subs(sub_args))
             else:
@@ -90,13 +92,6 @@ def substituteFunctions(function, sub_functions, left_side, sub_args = None, par
                         print(" and ", end = '')
                     substitutes.append((comb[0]["function"](comb[1][k]), (comb[0]["subs"][perm[k]](comb[1][k]))), )
                 print(":")
-
-                print("###")
-                print("### function:", function)
-                print("### substitutes:", substitutes)
-                print("#### partial_derivative:", partial_derivative)
-                print("### sub_args:", sub_args)
-                print("###")
 
                 for j in range(tabs+1):
                     print("\t ", end = '')
@@ -284,31 +279,33 @@ def codeGenerator():
 
 
 
-    substitutes = {"left"  : ((Psi_m1, '( ohm_potential(parameters.C[0], parameters.Chi[0], parameters.Eg[0], parameters.Nc[0], parameters.Nv[0]) + Ua)'),
-                              (Phi_p_m1, 'Ua'),
-                              (Phi_n_m1, 'Ua'),
-                              (exp,np_exp),
-                              (sqrt,np_sqrt),
-                              (Abs,np_abs)
-    ),
-                   "right" : ((Psi_p1, '( ohm_potential(parameters.C[parameters.n-1], parameters.Chi[parameters.n-1], parameters.Eg[parameters.n-1], parameters.Nc[parameters.n-1], parameters.Nv[parameters.n-1]) + Ub)'
-                   ),
-                              (Phi_p_p1, 'Ub'),
-                              (Phi_n_p1, 'Ub'),
-                              (Chi_p1, Chi_00),
-                              (Eg_p1, Eg_00),
-                              (Nv_p1, Nv_00),
-                              (Nc_p1, Nc_00),
-                              (exp,np_exp),
-                              (sqrt,np_sqrt),
-                              (Abs,np_abs)
-                   ),
-                   "center": ((1,1),
-                              (exp,np_exp),
-                              (sqrt,np_sqrt),
-                              (Abs,np_abs)
-                   )
+    substitutes = {
+        "left"  : {
+            Psi_m1: Symbol('(ohm_potential(parameters.C[0], parameters.Chi[0], parameters.Eg[0], parameters.Nc[0], parameters.Nv[0]) + Ua)'),
+            Phi_p_m1: Symbol('Ua'),
+            Phi_n_m1: Symbol('Ua'),
+            exp: np_exp,
+            sqrt: np_sqrt,
+            Abs: np_abs
+        },
+        "right" : {
+            Psi_p1: Symbol('(ohm_potential(parameters.C[parameters.n-1], parameters.Chi[parameters.n-1], parameters.Eg[parameters.n-1], parameters.Nc[parameters.n-1], parameters.Nv[parameters.n-1]) + Ub)'),
+            Phi_p_p1: Symbol('Ub'),
+            Phi_n_p1: Symbol('Ub'),
+            Chi_p1: Chi_00,
+            Eg_p1: Eg_00,
+            Nv_p1: Nv_00,
+            Nc_p1: Nc_00,
+            exp: np_exp,
+            sqrt: np_sqrt,
+            Abs: np_abs
+        },
+        "center": {
+            exp: np_exp,
+            sqrt: np_sqrt,
+            Abs: np_abs
         }
+    }
 
     print("####################################")
     print("### This code was automatically  ###")
@@ -364,21 +361,20 @@ def codeGenerator():
     substituteFunctions(j_p,
                         search_sub_function,
                         "j_p[i]",
-                        sub_args = 
-                        (
-                            (Psi_k,   Psi_00), 
-                            (Psi_l,   Psi_p1),
-                            (Phi_p_k, Phi_p_00),
-                            (Phi_p_l, Phi_p_p1),
-                            (Chi_k,   Chi_00),
-                            (Chi_l,   Chi_p1),
-                            (Eg_k,    Eg_00),
-                            (Eg_l,    Eg_p1),
-                            (Nv_k,    Nv_00),
-                            (Nv_l,    Nv_p1),
-                            (exp,     np_exp),
-                            (Abs,     np_abs)
-                        ),
+                        sub_args = {
+                            Psi_k:   Psi_00, 
+                            Psi_l:   Psi_p1,
+                            Phi_p_k: Phi_p_00,
+                            Phi_p_l: Phi_p_p1,
+                            Chi_k:   Chi_00,
+                            Chi_l:   Chi_p1,
+                            Eg_k:    Eg_00,
+                            Eg_l:    Eg_p1,
+                            Nv_k:    Nv_00,
+                            Nv_l:    Nv_p1,
+                            exp:     np_exp,
+                            Abs:     np_abs
+                        },
                         tabs = 2,
                         do_simplify = 1
     )
@@ -403,19 +399,18 @@ def codeGenerator():
     substituteFunctions(j_n,
                         search_sub_function,
                         "j_n[i]",
-                        sub_args = 
-                        (
-                            (Psi_k,   Psi_00), 
-                            (Psi_l,   Psi_p1),
-                            (Phi_n_k, Phi_n_00),
-                            (Phi_n_l, Phi_n_p1),
-                            (Chi_k,   Chi_00   ),
-                            (Chi_l,   Chi_p1),
-                            (Nc_k,    Nc_00),
-                            (Nc_l,    Nc_p1),
-                            (exp,     np_exp),
-                            (Abs,     np_abs)
-                        ),
+                        sub_args = {
+                            Psi_k:   Psi_00, 
+                            Psi_l:   Psi_p1,
+                            Phi_n_k: Phi_n_00,
+                            Phi_n_l: Phi_n_p1,
+                            Chi_k:   Chi_00,
+                            Chi_l:   Chi_p1,
+                            Nc_k:    Nc_00,
+                            Nc_l:    Nc_p1,
+                            exp:     np_exp,
+                            Abs:     np_abs
+                        },
                         tabs = 2,
                         do_simplify = 1
     )
@@ -530,24 +525,30 @@ def codeGenerator():
     ]
 
 
-    substitutes = {"left"  : ((Psi_m1, '(ohm_potential(parameters.C[0], parameters.Chi[0], parameters.Eg[0], parameters.Nc[0], parameters.Nv[0]) + Ua)'),
-                              (Phi_p_m1, 'Ua'),
-                              (Phi_n_m1, 'Ua'),
-                              (exp,np_exp),
-                              (sqrt,np_sqrt)),
-                   "right" : ((Psi_p1, '(ohm_potential(parameters.C[parameters.n-1], parameters.Chi[parameters.n-1], parameters.Eg[parameters.n-1], parameters.Nc[parameters.n-1], parameters.Nv[parameters.n-1]) + Ub)'),
-                              (Phi_p_p1, 'Ub'),
-                              (Phi_n_p1, 'Ub'),
-                              (Eg_p1, Eg_00),
-                              (Chi_p1, Chi_00),
-                              (Nv_p1, Nv_00),
-                              (Nc_p1, Nc_00),
-                              (exp,np_exp),
-                              (sqrt,np_sqrt)),
-                   "center": ((1,1),
-                              (exp,np_exp),
-                              (sqrt,np_sqrt))
+    substitutes = {
+        "left"  : {
+            Psi_m1:   Symbol('(ohm_potential(parameters.C[0], parameters.Chi[0], parameters.Eg[0], parameters.Nc[0], parameters.Nv[0]) + Ua)'),
+            Phi_p_m1: Symbol('Ua'),
+            Phi_n_m1: Symbol('Ua'),
+            exp:      np_exp,
+            sqrt:     np_sqrt
+        },
+        "right" : {
+            Psi_p1: Symbol('(ohm_potential(parameters.C[parameters.n-1], parameters.Chi[parameters.n-1], parameters.Eg[parameters.n-1], parameters.Nc[parameters.n-1], parameters.Nv[parameters.n-1]) + Ub)'),
+            Phi_p_p1: Symbol('Ub'),
+            Phi_n_p1: Symbol('Ub'),
+            Eg_p1:    Eg_00,
+            Chi_p1:   Chi_00,
+            Nv_p1:    Nv_00,
+            Nc_p1:    Nc_00,
+            exp:      np_exp,
+            sqrt: np_sqrt
+        },
+        "center": {
+            exp:  np_exp,
+            sqrt: np_sqrt 
         }
+    }
 
 
 
