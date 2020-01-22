@@ -3,7 +3,9 @@ SyNumSeS
 
 **SyNumSeS** is a Python https://www.python.org package for simulating various semiconductor devices
 in one dimension.
-It solves the *Van Roosbroeck equations*.
+It solves the *Van Roosbroeck equations* using the *Scharfetter Gummel algorithm* [CIT01]_.
+
+
 
 It can simulate:
 
@@ -27,13 +29,16 @@ visualize their parameters like:
 - quasi-Fermi-levels ...
 
 **SyNumSeS** stands for
-Symbolically, Numerically
+Symbolicall, Numerically
 Semiconductor Simulation.
 
 It uses **SymPy** https://www.sympy.org/en/index.html to derive
-Jacobian matrix from the the discretized *Van Roosbroeck equations*
+the Jacobian matrix from the the discretized *Van Roosbroeck equations*
+using the *Scharfetter Gummel algorithm*
 to solve for the vector containing the
-potential and the quasi-Fermi-level by the Newton method.
+potential and the quasi-Fermi-levels by the Newton method.
+This way the *Van Roosbroeck equations* can be simply extended by,
+for example, recombination terms. 
 The linear solver uses
 **SciPy** https://www.scipy.org further
 **NumPy** https://numpy.org/ is used for fast operations.
@@ -51,7 +56,7 @@ change to the *doc* directory::
 
   cd synumses/doc
 
-and build the documentation::
+and build the documentation (not needed)::
 
   make html
 
@@ -91,3 +96,13 @@ The best way to get started is to have a look at the
 or in the folder *synumses/examples/jupyter/*.
 
 Some Python scripts can be found in *synumses/examples/*
+
+Known Issues
+------------
+
+- Quasi-Fermi-levels are not constant in thermodynamic equilibrium
+- The simulation of wide band gap material show convergence problems
+
+.. [CIT01] D. Scharfetter, H. Gummel, Large-signal analyses of a
+	   silicon read diode oscillator,
+	   IEEE Trans. Electron Devices 16(1) (1969) 64-77

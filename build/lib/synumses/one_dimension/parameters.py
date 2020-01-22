@@ -74,7 +74,7 @@ bernoulli_limit = 1E1 # Default 1E-4
 def init_geometry():
         """
         This functions sets grid size (**dx**) and the position of the gris points (**pos_x**).
-        This function must be executed after changing the length (**lx**) of the number of grid points (**n**).    
+        This function must be executed after changing the length (**lx**) or the number of grid points (**n**).    
         """
         
 

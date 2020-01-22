@@ -1,5 +1,6 @@
 **SyNumSeS** is a  package for simulating various semiconductor devices
-in one dimension. It solves the *Van Roosbroeck equations*.
+in one dimension. It solves the *Van Roosbroeck equations* using the
+Scharfetter Gummel algorithm.
 
 You can simulate:
 - pn-diodes
