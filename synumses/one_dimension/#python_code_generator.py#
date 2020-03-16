@@ -447,7 +447,7 @@ def codeGenerator():
 
     
     print("#################################")
-    print("###########  Jacobi  ###########")
+    print("###########  Jacobi  ############")
     print("#################################")
 
     print("def jacobian(Ua, Ub):")
@@ -612,4 +612,15 @@ def codeGenerator():
     print()
 
 if __name__ == '__main__':
-    codeGenerator()
+
+    search_sub_function = {"function"  : bernoulli,
+                           "if_expr"   : Abs,
+                           "if_states" : [' <= ',
+                                          ' >  '],
+                           "value"     : bernoulli_limit,
+                           "subs"      : [bernoulli_poly,
+                                          bernoulli_exp]}
+
+    substituteFunctions(j_p, search_sub_function
+
+    #codeGenerator()
