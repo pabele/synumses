@@ -1,0 +1,92 @@
+
+from sympy import symbols, Symbol 
+from sympy import Function
+from sympy import solve, pretty
+from sympy import diff
+from sympy import sin, cos, exp, ln, sinh, cosh, sqrt, exp, Abs
+from sympy import simplify, trigsimp
+from sympy.parsing.sympy_parser import parse_expr
+import itertools
+
+
+
+def substituteFunctions(function, sub_function, left_side):
+    """
+    Depending on the value of the argument of a function it is substituted.
+    """
+
+
+    # Search for all arguments of (sub_function["function"]
+
+    comb = []
+
+    
+    found_arguments = []
+    for funcs in function.find(Function): #loop all functions
+
+        if(str(type(funcs)) == str(sub_function["function"])):
+                found_arguments.append(funcs.args[0])
+
+    comb = (sub_function, found_arguments)
+
+    print("len(found_arguments):", len(found_arguments))
+    print("len(sub_function()", len(sub_function["if_states"]))
+
+    print(list(range(len(sub_function["if_states"]))))
+
+    perm = list(itertools.product(range(len(sub_function["if_states"])), len(found_arguments)))
+
+    if not found_arguments:
+
+        print(left_side, "= ", end = '')
+
+        print(function)
+
+    else:
+        
+        for i in range(len(perm)):
+
+            if (i==0):
+                print("if", end = '')
+            elif(i<len(perm)):
+                print("elif", end = '')
+            else:
+                print("else", end = '')
+
+
+            for j in range(len(found_arguments)): #number of arguments
+                print(perm[i])
+
+
+
+if __name__ == '__main__':
+
+    x,y,z = symbols('x, y, z')
+
+    f11 = Function('f11')
+    f12 = Function('f12')
+    f13 = Function('f13')
+
+    f1 = Function('f1')
+    f2 = Function('f2')
+    f3 = Function('f3')
+    f4 = Function('f4')
+    f5 = Function('f5')
+
+
+   
+    f_ges = f11(x) + f12(y) + f11(z)
+
+
+    search_sub_function = ({"function"  : f11,
+                            "if_expr"   : Abs,
+                            "if_states" : [' < ', ' < ', ' < '],
+                            "if_values" : [1.5, 2.0, 4.0],
+                            "if_subs"   : [f2, f3, f4],
+                            "else_sub"  : f5
+    })
+
+
+    substituteFunctions(f_ges, search_sub_function, "A")
+
+    #codeGenerator()

@@ -100,8 +100,8 @@ Some Python scripts can be found in *synumses/examples/*
 Known Issues
 ------------
 
-- Quasi-Fermi-levels are not constant in thermodynamic equilibrium
-- The simulation of wide band gap material show convergence problems
+- Quasi-Fermi-levels are not constant in thermodynamic equilibrium.
+- The simulation of wide band gap material shows convergence problems.
 
 .. [CIT01] D. Scharfetter, H. Gummel, Large-signal analyses of a
 	   silicon read diode oscillator,
