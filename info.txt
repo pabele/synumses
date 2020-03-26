@@ -1,8 +1,11 @@
-pip install -e ~/Programming/python/synumses
+pip install -e ~/programming/python/synumses
 pip uninstall synumses
 
 
+
 python3 setup.py sdist bdist_wheel
+
+#pip install twine
 
 #python3 -m twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
 
@@ -20,7 +23,7 @@ cd docs
 
 sphinx-quickstart 
 
-# von Hand index.rst geändert, um KOmmentar von __init__.py darzustellen
+# von Hand index.rst geändert, um Kommentar von __init__.py darzustellen
 .. automodule:: synumses
    :members:
 
@@ -28,63 +31,17 @@ sphinx-quickstart
 sphinx-apidoc -f -o source/ ../synumses/ ../synumses/one_dimension/scharfetter_gummel_bernoulli_n4s.py ../synumses/one_dimension/scharfetter_gummel_bernoulli_n6s.py ../synumses/one_dimension/scharfetter_gummel_bernoulli_n8s.py
 make html
 
+
+# *****
+#  git
+# *****
+
 # git
 git remote add origin  https://github.com/pabele/synumses.git
 git push origin master
 
 git clone 
 
-commit f79216fdfbdbbdf1ea7e44c0da3f2b2cf0fa4ba9
-Author: Peter Abele <ppabele@web.de>
-Date:   Thu Jan 2 00:22:45 2020 +0100
 
-    Es werden die Elektroaffinität (Chi) und der Bandabstand (Eg) als Parameter verwendet und nicht mehr Leitungsbandenergie und Valenzbandenergie
-
-commit 813cf3d439d05ac1b884a5c54579547aa6745faa
-Author: Peter Abele <ppabele@web.de>
-Date:   Mon Dec 30 19:46:50 2019 +0100
-
-    Vor änderung in Chi und Eg
-
-commit 09b6a4896ac604ade759b8224b19948e8a68ba08
-Author: Peter Abele <ppabele@web.de>
-Date:   Sun Dec 29 20:16:46 2019 +0100
-
-    Etwas aufgeräumt!
-
-commit d15fe3ead6bdf7e2f1d92bbf855e0a14c69cbe17
-Author: Peter Abele <ppabele@web.de>
-Date:   Mon Dec 9 15:10:38 2019 +0100
-
-    Für die Berechnung der Löcher- und Elektronenstromdichte wird auch die Funktion substituteFunctions benutzt
-
-commit 0fb8a4fee1a1d405aa7c6dd214335870ccb6578c
-Author: Peter Abele <ppabele@web.de>
-Date:   Thu Nov 21 22:20:28 2019 +0100
-
-    substituteFunctions wurde für Jacobi-Matri getestet
-
-commit 1d98d3d711dba79079eefdbb5f28224b9338404d
-Author: Peter Abele <ppabele@web.de>
-Date:   Fri Nov 8 18:51:49 2019 +0100
-
-    substituteFunctions wurde mit makeUpdate erfolgreich getestet
-
-commit b7b07396477bb9fc109faab75b9e7c2c4a9c6fbd
-Author: Peter Abele <ppabele@web.de>
-Date:   Fri Nov 8 18:31:43 2019 +0100
-
-    substituteFunctions implementiert, Simulation kovergiert aber nicht
-
-commit e853e6d2903df4a9d998c8e8410a75482ce66d06
-Author: Peter Abele <ppabele@web.de>
-Date:   Thu Nov 7 21:58:40 2019 +0100
-
-    First commit for test
-
-commit 20c62453d8ccc8b273448acd5011543da6a33772
-Author: Peter Abele <ppabele@web.de>
-(base) pabele@pabele-ThinkPad-T430:~/Programming/python/synumses$ git commit -m "Commit vor merge"
-[detached HEAD 944b7aa] Commit vor merge
 
 

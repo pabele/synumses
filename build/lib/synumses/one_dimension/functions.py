@@ -27,7 +27,7 @@ def calc_n_density():
 
 def ohm_potential(C, Chi, Eg, Nc, Nv):
    """
-   Calculates ans returns the potential from the doping level, the electron affinity, the band gap, and the density of states.
+   Calculates and returns the potential from the doping level, the electron affinity, the band gap, and the density of states.
    """
 
    from synumses.one_dimension.parameters import q, kB, Ut, T

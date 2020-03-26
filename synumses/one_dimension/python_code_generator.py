@@ -25,8 +25,8 @@ import time
 # activate if simplify() is not to be used
 # this results in much faster calculation
 #
-#def simplify(x):
-#    return x
+def simplify(x):
+    return x
 
 def bernoulli_poly(expr):
     """
@@ -55,7 +55,7 @@ def substituteFunctions(function, sub_function, left_side, sub_args = [], partia
 #    print("### function:", function)
 #    print("### sub args:", sub_args)
 #    print("### left_side:", left_side)
-    print("### sub_args", sub_args)
+#    print("### sub_args", sub_args)
 #    print()
 #    print("### function.subs(sub_args):", function.subs(sub_args))
 #    if partial_derivative  is not None:

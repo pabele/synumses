@@ -68,7 +68,7 @@ lx = 400E-9
 #  Limit for Bernoulli function epproximation
 # *********************************************
 
-bernoulli_limit = 1E1 # Default 1E-4
+bernoulli_limit = 1E-4 # Default 1E-4
 
 
 def init_geometry():
