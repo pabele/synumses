@@ -90,7 +90,7 @@ def substituteFunctions(function, sub_function, left_side, sub_args = [], partia
         
         if  partial_derivative is not None:
                 
-            part_der = diff(function, partial_derivative).subs(sub_args)
+            part_der = diff(simplify(function), partial_derivative).subs(sub_args)
             
             if (do_simplify):
                 print(simplify(part_der))
@@ -408,12 +408,22 @@ def codeGenerator():
     print("def bernoulli(x):")
 
     x = Symbol('x')
-    print("\tif (x < ", bernoulli_limit,"):")
-    print("\t\treturn",bernoulli_poly(x))
-    print("\telse:")
-    print("\t\treturn",bernoulli_exp(x).subs(exp,np_exp))
-    print()
-    print()
+
+    search_sub_function = ({"function" : bernoulli,
+                            "if_states" : ['<','<'],
+                            "if_values" : [-bernoulli_limit, bernoulli_limit],
+                            "if_subs"   : [bernoulli_exp , bernoulli_poly],
+                            "else_sub"  : bernoulli_exp
+    })
+
+    substituteFunctions(bernoulli(x),
+                        search_sub_function,
+                        "x",
+                        sub_args = {},
+                        tabs = 1,
+                        do_simplify = 1
+    )
+    
 
     print("############################################")
     print("########### hole_current_density ###########")

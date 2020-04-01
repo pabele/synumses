@@ -37,6 +37,7 @@ make html
 # *****
 
 # git
+
 git remote add origin  https://github.com/pabele/synumses.git
 git push origin master
 
