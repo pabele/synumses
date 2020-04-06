@@ -585,8 +585,8 @@ def codeGenerator():
     poisson =  ((Psi_p1 - 2*Psi_00 + Psi_m1) + q / Epsilon_00 * (C_00 + p -n)*dx**2)
     #div_j_p = Phi_p_00
     #div_j_n = Phi_n_00
-    div_j_p = Phi_p_00 - Phi_p_m1
-    div_j_n = Phi_n_00 - Phi_n_m1
+    div_j_p = Phi_p_00 - Phi_p_m1 #Difference to the not first equations, resultsin a constant quasi Fermi level
+    div_j_n = Phi_n_00 - Phi_n_m1 #Difference to the not first equations, resultsin a constant quasi Fermi level
 
     functions = [
         ["3*i+0",poisson, "poisson"],
