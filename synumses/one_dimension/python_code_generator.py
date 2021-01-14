@@ -65,6 +65,7 @@ Psi_m1, Psi_00, Psi_p1       = symbols('parameters.u[3*(i-1)+0], parameters.u[(3
 Phi_p_m1, Phi_p_00, Phi_p_p1 = symbols('parameters.u[3*(i-1)+1], parameters.u[(3*i+0)+1], parameters.u[3*(i+1)+1]')
 Phi_n_m1, Phi_n_00, Phi_n_p1 = symbols('parameters.u[3*(i-1)+2], parameters.u[(3*i+0)+2], parameters.u[3*(i+1)+2]')
 
+Psi_old, Phi_p_old,  Phi_n_old = symbols('parameters.u_old[(3*i+0)+0], parameters.u_old[(3*i+0)+1], parameters.u_old[(3*i+0)+2]')
 
 Chi_m1, Chi_00, Chi_p1    = symbols('parameters.Chi[i-1], parameters.Chi[i+0], parameters.Chi[i+1]')
 Eg_m1, Eg_00, Eg_p1       = symbols('parameters.Eg[i-1], parameters.Eg[i+0], parameters.Eg[i+1]')
@@ -75,6 +76,7 @@ Nc_m1, Nc_00, Nc_p1       = symbols('parameters.Nc[i-1], parameters.Nc[i+0], par
 
 
 dx = symbols('parameters.dx')
+dt = symbols('parameters.dt')
 
 recombination = symbols('parameters.recombination[i]')
 generation    = symbols('parameters.generation[i]')
@@ -98,18 +100,16 @@ mu_n, mu_p = symbols('parameters.mu_n[i], parameters.mu_p[i]')
 
 Cau = symbols('parameters.Cau[i]')
 
-ni = Function('ni')
-p = Function('p')
-n = Function('n')
-
-
-
-# ni^2
+#ni = Function('ni')
+#p = Function('p')
+#n = Function('n')
 
 ni2 =(Nv_00*Nc_00)*exp(-q*(Eg_00)/(kB*T))
 p  = Nv_00*exp(q*( (-Chi_00 - Eg_00) + Phi_p_00 - Psi_00)/(kB*T))
 n  = Nc_00*exp(q*(        +Chi_00    - Phi_n_00 + Psi_00)/(kB*T))
 
+p_old  = Nv_00*exp(q*( (-Chi_00 - Eg_00) + Phi_p_old - Psi_old)/(kB*T))
+n_old  = Nc_00*exp(q*(        +Chi_00    - Phi_n_old + Psi_old)/(kB*T))
 
 #
 # Van Roosbroeck equations
@@ -150,7 +150,11 @@ div_j_n = (
     - q*(Cau*(n*p-ni2)-generation)*dx
 )
 
+div_j_p_t = div_j_p + q*(p - p_old)*(dx/dt)
+div_j_n_t = div_j_n + q*(n - n_old)*(dx/dt)
 
+#div_j_p_t = div_j_p
+#div_j_n_t = div_j_n
 
 
 #############################
@@ -207,7 +211,7 @@ substitutes = {
 }
 
 
-search_sub_function = ({"function" : bernoulli,
+search_sub_function = ({"function"  : bernoulli,
                         "if_states" : ['<','<'],
                         "if_values" : [-bernoulli_limit, bernoulli_limit],
                         "if_subs"   : [bernoulli_exp , bernoulli_poly],
@@ -487,7 +491,7 @@ def codeGenerator():
     global ni, p, n 
 
      
-    global poisson, j_p, j_n, div_j_n, div_j_p
+    global poisson, j_p, j_n, div_j_n, div_j_p, div_j_n, div_j_p
     
     global functions, partial_derivatives, substitutes
 
@@ -622,10 +626,7 @@ def codeGenerator():
     # for constant Fermi level 
     #
     # *****************************************************
-    
-    poisson =  ((Psi_p1 - 2*Psi_00 + Psi_m1) + q / Epsilon_00 * (C_00 + p -n)*dx**2)
-    #div_j_p = Phi_p_00
-    #div_j_n = Phi_n_00
+
     div_j_p = Phi_p_00 - Phi_p_m1 #Difference to the not first equations, resultsin a constant quasi Fermi level
     div_j_n = Phi_n_00 - Phi_n_m1 #Difference to the not first equations, resultsin a constant quasi Fermi level
 
@@ -641,7 +642,30 @@ def codeGenerator():
     makeUpdate_b("first_update_b")
 
     makeJacobi("first_jacobian")
+
     
+    # *****************************************************
+    #
+    # Generating the Jacobian matrix and b for transient
+    # for constant Fermi level 
+    #
+    # *****************************************************
+
+    div_j_p = div_j_p_t
+    div_j_n = div_j_n_t
+
+    #
+    # As div_j_p and div_j_n have change,d functions must be updated
+    #
+    functions = [
+        ["3*i+0",poisson, "poisson"],
+        ["3*i+1",div_j_p, "div_j_p"],
+        ["3*i+2",div_j_n, "div_j_n"]
+    ]
+
+    makeUpdate_b("transient_update_b")
+
+    makeJacobi("transient_jacobian")
     
 
 if __name__ == '__main__':

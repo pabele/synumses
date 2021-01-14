@@ -21,16 +21,22 @@ It also defines the default device, a silicon pn junction.
    :widths: 10, 25, 10
    
    "pos_x", "position of grid point", "np.linspace(0,lx,n)"
-   "Ec", "energy of conduction band", "np.full(n, 1.12)"
+  
+   "Chi", "electron affinity", "np.full(n, 4.05)"
+   "Eg", "band gap", "np.full(n, 1.12)"
+
+
    "Nc", "effective density of states in conduction band", "np.full(n, 2.81E25)"
-   "Ev", "energy of valence band", "np.full(n, 0.0)"
    "Nv", "effective density of states in valence band", "np.full(n, 1.83E25)"
+
+
    "Epsilon", "permittivity of the material", "np.full(n, Epsilon_r * Epsilon_0)"
    "mu_p", "hole mobility :math:`\mu_\mathrm{p}`", "np.full(n, 0.045)"
    "mu_n", "electron mobility :math:`\mu_\mathrm{n}`", "np.full(n, 0.14)"
-   "C", "doping", "np.zeros(n)"
+   "C", "doping", "np.zeros(n), -1E24/1E24"
    "Cau", "coefficient for recombination: q*(Cau*(n*p-ni2)-generation)*dx ", "np.full(n, 0)"
    "generation", "generation: q*(Cau*(n*p-ni2)-generation)*dx", "np.full(n, 0.0)"
+
    "b", ":math:`f(x)`", "np.zeros(3*n)"
    "A", "jacobian matrix",  "sparse.lil_matrix((3*n, 3*n))"
    "x", ":math:`\delta x`",  "np.zeros(3*n)"
@@ -90,6 +96,10 @@ def init_parameters():
         After executing this function the parameters can be altered.
         This function must be executed after **init_geometry()**
         """
+
+        global dt
+        dt = 1E-12
+        
         global Chi
         Chi = np.full(n, 4.05)
 
@@ -123,8 +133,12 @@ def init_parameters():
  
         #
         global u
-        u = np.zeros(3*n) 
+        u = np.zeros(3*n)
 
+        #
+        global u_old
+        u_old = np.zeros(3*n)
+        
         # 
         global b
         b = np.zeros(3*n)
