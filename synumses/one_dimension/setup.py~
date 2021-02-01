@@ -1,0 +1,11 @@
+from setuptools import setup
+
+setup(name='modells',
+      version='0.1',
+      description='Modells for semiconductor simulation',
+      url='',
+      author='Peter Abele',
+      author_email='ppabele@web.de',
+      license='MIT',
+      packages=['models'],
+      zip_safe=False)

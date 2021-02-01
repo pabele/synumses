@@ -1,0 +1,32 @@
+Metadata-Version: 2.1
+Name: synumses-pkg-pabele
+Version: 0.8.3
+Summary: Numerical solver for semiconductor devices in Python
+Home-page: UNKNOWN
+Author: Peter Abele
+Author-email: ppabele@web.de
+License: GNU GPLv3
+Description: **SyNumSeS** is a  package for simulating various semiconductor devices
+        in one dimension. It solves the *Van Roosbroeck equations* using the
+        Scharfetter Gummel algorithm.
+        
+        You can simulate:
+        - pn-diodes
+        - LEDs
+        - MOS-diodes
+        - bipolar transistors
+        - solar cells
+        
+        It can be cloned from:
+        <https://github.com/pabele/synumses>
+Platform: UNKNOWN
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python :: 3.7
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)
+Classifier: Topic :: Scientific/Engineering
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Scientific/Engineering :: Physics
+Classifier: Topic :: Scientific/Engineering :: Visualization
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.7
+Description-Content-Type: text/markdown

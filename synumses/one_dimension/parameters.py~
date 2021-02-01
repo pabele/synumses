@@ -1,0 +1,134 @@
+import numpy as np
+
+
+import scipy.sparse as sparse 
+
+
+# Global Variables
+
+# #####################
+#       Constants
+# #####################
+T = 300.
+q = 1.6E-19
+
+kB = 1.38E-23
+Ut = kB*T/q
+
+Epsilon_0 = 8.85E-12
+
+
+# ############
+#    Mesh
+# ############
+n  = 400
+lx = 400E-9
+
+
+def init_geometry():
+    
+        global dx
+        dx = lx/n
+
+        global pos_x
+        pos_x = np.linspace(0,lx,n)
+
+        # #########################
+        # material parameters for
+        #         silicon
+        # #########################
+
+        global Ec
+        Ec = np.full(n, 1.12)
+        global Nc
+        Nc = np.full(n, 2.81E25)
+
+        global Ev
+        Ev = np.full(n, 0.0)
+        global Nv
+        Nv = np.full(n, 1.83E25)
+
+        global Epsilon
+        Epsilon = np.full(n, 11.6 * Epsilon_0)
+
+        global mu_p
+        mu_p = np.full(n, 0.045)
+        global mu_n
+        mu_n = np.full(n, 0.14)
+
+        global tau_p
+        tau_p = np.full(n, 1E-9)
+        global tau_n
+        tau_n = np.full(n, 1E-9)
+
+        global Cau
+        Cau = np.full(n, 2.3E-20)
+
+        global p_density
+        p_density = np.zeros(n) 
+
+        global n_density
+        n_density = np.zeros(n) 
+
+
+
+        global recombination
+        recombination = np.full(n, 0.0)
+        
+        global generation
+        generation = np.full(n, 0.0)
+
+
+        global  ni_density
+        ni_density = np.full(n, 0.0)
+
+        global u
+        u = np.zeros(3*n) 
+
+
+
+        global b
+        b = np.zeros(3*n)
+        global A
+        A = sparse.lil_matrix((3*n, 3*n))
+
+        # Variables to be solved
+        global x
+        x = np.zeros(3*n)
+
+        # Doping-Profile
+        global C
+        C = np.zeros(n)
+
+
+        # *****************
+        #    Definition
+        #   PN-Junction
+        # *****************
+
+        Nd = 1E24
+        Na = 1E24
+
+        for i in range(0,n):
+                if i < n/2:
+                    C[i] = -Na
+                else:
+                    C[i] = +Nd
+
+
+        return None
+
+def init_potential():
+    from twoport.functions import ohm_potential
+    for i in range(0,n):
+            u[3*i + 0] = ohm_potential(C[i], Ec[i], Ev[i], Nc[i], Nv[i])
+            u[3*i + 1] = 0.
+            u[3*i + 2] = 0.
+    return None
+
+
+
+init_geometry()
+
+
+init_potential()

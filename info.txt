@@ -1,0 +1,73 @@
+# ********************
+# lokale installation
+# ********************
+
+pip install -e ~/programming/python/synumses
+pip uninstall synumses
+
+
+# ******************************************
+# upload bei pypi
+# die auskommentieren Zeilen nich angeben
+# username: pabele, pw: pypi4
+# ******************************************
+
+python3 setup.py sdist bdist_wheel
+
+#pip install twine
+
+#python3 -m twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ dist/*
+
+python3 -m twine upload dist/*
+
+# **********************
+# SyNumSeS installieren
+# ***********************
+
+#python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps synumses-pkg-pabele
+
+python3 -m pip install synumses-pkg-pabele
+
+
+# *********
+#  sphinx 
+# *********
+
+cd docs
+
+sphinx-quickstart 
+
+# von Hand index.rst geändert, um Kommentar von __init__.py darzustellen
+.. automodule:: synumses
+   :members:
+
+# es müssen beide Befehle nacheinander ausgeführt werden:
+sphinx-apidoc -f -o source/ ../synumses/ ../synumses/one_dimension/scharfetter_gummel_bernoulli_n4s.py ../synumses/one_dimension/scharfetter_gummel_bernoulli_n6s.py ../synumses/one_dimension/scharfetter_gummel_bernoulli_n8s.py
+make html
+
+# ***********************************
+# git
+# remove files from repository only
+# ***********************************
+
+git rm file_to_delete				# for files
+git rm --cached -r dir_to_delete/		# for directories
+git rm --cached `git ls-files -i -X .gitignore` # all files from -gitignore
+git commit -m "Deleted file"
+git push
+
+
+# *****************************
+# github upload
+# username: pabele, pw: github4
+# *****************************
+
+
+#git remote add origin  https://github.com/pabele/synumses.git
+git push origin master
+
+#git clone 
+
+
+
+
