@@ -33,9 +33,9 @@ def ohm_potential(C, Chi, Eg, Nc, Nv):
    from synumses.one_dimension.parameters import q, kB, Ut, T
    
    ni = np.sqrt(Nc*Nv)*np.exp(-((Eg)*q)/(2.*kB*T))
-   Phi = -Chi - Eg/2. - 0.5*Ut*np.log(Nc/Nv) + Ut*np.arcsinh(C/(2.*ni))
+   Psi = -Chi - Eg/2. - 0.5*Ut*np.log(Nc/Nv) + Ut*np.arcsinh(C/(2.*ni))
     
-   return(Phi)
+   return(Psi)
 
 
 def calc_ni_density():

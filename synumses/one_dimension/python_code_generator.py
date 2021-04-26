@@ -46,11 +46,13 @@ def bernoulli_exp(expr):
     """
     return expr/(exp(expr) - 1)
     
-
+#
+# Global variables
+#
 bernoulli = Function('bernoulli')
-
 bernoulli_limit = symbols('parameters.bernoulli_limit')
 
+x = Symbol('x')
 
 Phi_n_k, Phi_n_l = symbols('Phi_n_k, Phi_n_l')
 Phi_p_k, Phi_p_l = symbols('Phi_p_k, Phi_p_l')
@@ -114,45 +116,38 @@ n  = Nc_00*exp((        +Chi_00    - Phi_n_00 + Psi_00)/Ut)
 p_old  = Nv_00*exp(( (-Chi_00 - Eg_00) + Phi_p_old - Psi_old)/Ut)
 n_old  = Nc_00*exp((        +Chi_00    - Phi_n_old + Psi_old)/Ut)
 
-#
-# Van Roosbroeck equations
-#
 
-#poisson = ((Psi_p1 - 2.*Psi_00 + Psi_m1) + q / Epsilon * (C_00 + p -n)*dx**2).subs([(Psi_k, Psi_00),(Psi_l, Psi_p1),(Phi_p_k, Phi_p_00),(Phi_p_l,Phi_p_p1)])
+# **********************************
+# **********************************
+#     Van Roosbroeck equations
+# **********************************
+# **********************************
+
+#
+# Poisson equation
+#
 poisson = ((Psi_p1 - 2.*Psi_00 + Psi_m1) + q / Epsilon_00 * (C_00 + p - n)*dx**2)
 
 
 # 
-# electrical hole current density
+# Electrical hole current density
 #
-j_p =+kB*T/dx*(mu_p_l + mu_p_l)/2.*exp(-(Chi_k + Eg_k + Chi_l + Eg_l)/(2.*Ut))*(Nv_k + Nv_l)/2.*(
+j_p =+kB*T/dx*(mu_p_k + mu_p_l)/2.*(Nv_k + Nv_l)/2.*exp(-(Chi_k + Eg_k + Chi_l + Eg_l)/(2.*Ut))*(
     +bernoulli(+(Psi_l-Psi_k)/(Ut)) * exp((Phi_p_k - Psi_k)/(Ut))
     -bernoulli(-(Psi_l-Psi_k)/(Ut)) * exp((Phi_p_l - Psi_l)/(Ut))
 )
-#j_p =+(mu_p*kB*T)/(dx)*(
-#    exp((-Chi_l - Eg_l)/(2.*Ut))*(
-#        +bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nv_k*exp((Phi_p_k - Psi_k) / Ut)
-#        -bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nv_l*exp((Phi_p_l - Psi_l) / Ut)
-#    )
-#)
 
+# 
+# Electrical electron current density
 #
-# electrical electron current density
-#
-
-j_n = -kB*T/dx*(mu_n_l + mu_n_l)/2.*exp((Chi_k + Chi_l)/(2.*Ut))*(Nc_k + Nc_l)/2.*(
+j_n = -kB*T/dx*(mu_n_k + mu_n_l)/2.*(Nc_k + Nc_l)/2.*exp((Chi_k + Chi_l)/(2.*Ut))*(
     +bernoulli(-(Psi_l-Psi_k)/(Ut)) * exp((Psi_k - Phi_n_k)/Ut)
     -bernoulli(+(Psi_l-Psi_k)/(Ut)) * exp((Psi_l - Phi_n_l)/Ut)
 )
-    
-#j_n = -(mu_n*kB*T)/(dx)*(
-#    exp((Chi_k + Chi_l)/(2.*Ut))*(
-#        +bernoulli(-(Psi_l-Psi_k)/(Ut)) * Nc_k*exp((Psi_k - Phi_n_k) / Ut)
-#        -bernoulli(+(Psi_l-Psi_k)/(Ut)) * Nc_l*exp((Psi_l - Phi_n_l) / Ut)
-#    )
-#)
 
-
+#
+# Divergence of current density
+# 
 div_j_p = (
     - j_p.subs([(Psi_k, Psi_00),(Psi_l, Psi_p1),(Phi_p_k, Phi_p_00),(Phi_p_l,Phi_p_p1),(Eg_k, Eg_00),(Eg_l, Eg_p1),
                 (Chi_k, Chi_00),(Chi_l, Chi_p1),(Nv_k, Nv_00),(Nv_l, Nv_p1),(mu_p_k, mu_p_00),(mu_p_l, mu_p_p1)])
@@ -169,23 +164,17 @@ div_j_n = (
     - q*(Cau*(n*p-ni2)-generation)*dx
 )
 
+#
+# Time dependent divergence of current density
+#
 div_j_p_t = div_j_p + q*(p - p_old)*(dx/dt)
 div_j_n_t = div_j_n + q*(n - n_old)*(dx/dt)
 
-#div_j_p_t = div_j_p
-#div_j_n_t = div_j_n
-
-
-#############################
-# Start of module generation
-#############################
-
-functions = [
-    ["3*i+0",poisson, "poisson"],
-    ["3*i+1",div_j_p, "div_j_p"],
-    ["3*i+2",div_j_n, "div_j_n"]
-]
-
+#
+# The variable functions is defined before calling the functions
+#                   makeUpdate_b and makeJacobi
+# 
+functions = []
 
 partial_derivatives = [
     ["3*(i-1)+0",Psi_m1  ],
@@ -198,7 +187,6 @@ partial_derivatives = [
     ["3*(i+0)+2",Phi_n_00],
     ["3*(i+1)+2",Phi_n_p1]
 ]
-
 
 
 substitutes = {
@@ -241,7 +229,9 @@ substitutes = {
     }
 }
 
-
+#
+# Depending on the value of the argument the Bernoulli function is substituded
+#
 search_sub_function = ({"function"  : bernoulli,
                         "if_states" : ['<','<'],
                         "if_values" : [-bernoulli_limit, bernoulli_limit],
@@ -267,22 +257,23 @@ def substituteFunctions(function, sub_function, left_side, sub_args = [], partia
 #    print("### sub_function:", sub_function)
 
 
-    # Search for all arguments of (sub_function["function"]
-
-    comb = []
-
+# ****************************************************
+# Search for all arguments of sub_function["function"]
+# ****************************************************
     
+    comb = []
     found_arguments = []
+    
     for funcs in function.find(Function): #loop all functions
-
         if(str(type(funcs)) == str(sub_function["function"])):
                 found_arguments.append(funcs.args[0])
 
     comb = (sub_function, found_arguments)
 
     perm = list(itertools.product(range(len(sub_function["if_states"])+1), repeat = len(found_arguments)))
-#
 
+
+    
     if not found_arguments:
 
         for ii in range(tabs):
@@ -391,8 +382,6 @@ def makeUpdate_b(name):
     Generates the function vector.
     """
 
-    global functions, search_sub_function, substitutes
-    
     print("################################")
     print("########### {name} ###########".format(name=name))
     print("################################")
@@ -475,7 +464,7 @@ def makeJacobi(name):
                 else:
                     substituteFunctions(-function[1],
                                         search_sub_function, 
-                                        "parameters.A["+function[0]+","+partial_derivative[0]+"]",
+                                        left_side = "parameters.A["+function[0]+","+partial_derivative[0]+"]",
                                         sub_args = substitutes[s],
                                         partial_derivative = partial_derivative[1],
                                         tabs=4,
@@ -492,40 +481,11 @@ def codeGenerator():
     """
     This function generates the python code. 
     """
-    global bernoulli, bernoulli_limit
-
-    global Phi_n_k, Phi_n_l, Phi_p_k, Phi_p_l, Psi_k, Psi_l
-
-    global Chi_k, Chi_l, Eg_k, Eg_l, Nv_k, Nv_l, Nc_k, Nc_l, mu_p_k, mu_p_l, mu_n_k, mu_n_l 
-
-    global Psi_m1, Psi_00, Psi_p1, Phi_p_m1, Phi_p_00, Phi_p_p1, Phi_n_m1, Phi_n_00, Phi_n_p1
-
-
-    global Chi_m1, Chi_00, Chi_p1, Eg_m1, Eg_00, Eg_p1, Nv_m1, Nv_00, Nv_p1, Nc_m1, Nc_00, Nc_p1, mu_p_m1, mu_p_00, mu_p_p1, mu_n_m1, mu_n_00, mu_n_p1
-
-    global dx
+    # ******************************************************************
+    #  functions is a global variable, being modified in this function
+    # ******************************************************************
+    global functions
     
-    global recombination, generation
-
-    global C_00, Epsilon_00
-
-    global np_exp, np_sqrt, np_abs
-
-    global kB, T, q
-
-    global Ut
-
-    global mu_n, mu_p
-
-    global Cau
-
-    global ni, p, n 
-
-     
-    global poisson, j_p, j_n, div_j_n, div_j_p, div_j_n, div_j_p
-    
-    global functions, partial_derivatives, substitutes
-
    
     print("####################################")
     print("### This code was automatically  ###")
@@ -550,8 +510,6 @@ def codeGenerator():
     print("########### Bernoulli ###########")
     print("#################################")
     print("def bernoulli(x):")
-
-    x = Symbol('x')
 
     substituteFunctions(bernoulli(x),
                         search_sub_function,
@@ -653,11 +611,12 @@ def codeGenerator():
     #
     # *****************************************************
 
-    bernoulli = Function('bernoulli')
-    bernoulli_limit = symbols('parameters.bernoulli_limit')
-
+    functions = [
+        ["3*i+0",poisson, "poisson"],
+        ["3*i+1",div_j_p, "div_j_p"],
+        ["3*i+2",div_j_n, "div_j_n"]
+    ]
     makeUpdate_b("update_b")
-
     makeJacobi("jacobian")
 
     # *****************************************************
@@ -667,20 +626,12 @@ def codeGenerator():
     #
     # *****************************************************
 
-    div_j_p = Phi_p_00 - Phi_p_m1 #Difference to the not first equations, results in a constant quasi Fermi level
-    div_j_n = Phi_n_00 - Phi_n_m1 #Difference to the not first equations, results in a constant quasi Fermi level
-
-    #
-    # As div_j_p and div_j_n have changed functions must be updated
-    #
     functions = [
         ["3*i+0",poisson, "poisson"],
-        ["3*i+1",div_j_p, "div_j_p"],
-        ["3*i+2",div_j_n, "div_j_n"]
+        ["3*i+1",Phi_p_00 - Phi_p_m1, "div_j_p"], #Difference to the not first equations, results in a constant quasi Fermi level
+        ["3*i+2",Phi_n_00 - Phi_n_m1, "div_j_n"]  #Difference to the not first equations, results in a constant quasi Fermi level
     ]
-
     makeUpdate_b("first_update_b")
-
     makeJacobi("first_jacobian")
 
     
@@ -691,20 +642,17 @@ def codeGenerator():
     #
     # *****************************************************
 
-    div_j_p = div_j_p_t
-    div_j_n = div_j_n_t
 
     #
     # As div_j_p and div_j_n have changed functions must be updated
     #
     functions = [
         ["3*i+0",poisson, "poisson"],
-        ["3*i+1",div_j_p, "div_j_p"],
-        ["3*i+2",div_j_n, "div_j_n"]
+        ["3*i+1",div_j_p_t, "div_j_p"],
+        ["3*i+2",div_j_n_t, "div_j_n"]
     ]
 
     makeUpdate_b("transient_update_b")
-
     makeJacobi("transient_jacobian")
     
 

@@ -8,7 +8,7 @@ pip uninstall synumses
 
 # ******************************************
 # upload bei pypi
-# die auskommentieren Zeilen nich angeben
+# die auskommentieren Zeilen nicht angeben
 # username: pabele, pw: pypi4
 # ******************************************
 

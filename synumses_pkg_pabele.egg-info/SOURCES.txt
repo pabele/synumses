@@ -6,9 +6,6 @@ synumses/one_dimension/functions.py
 synumses/one_dimension/parameters.py
 synumses/one_dimension/python_code_generator.py
 synumses/one_dimension/scharfetter_gummel_bernoulli.py
-synumses/one_dimension/scharfetter_gummel_bernoulli_new.py
-synumses/one_dimension/scharfetter_gummel_bernoulli_simpify.py
-synumses/one_dimension/scharfetter_gummel_bernoulli_without_simplify.py
 synumses/one_dimension/solver.py
 synumses_pkg_pabele.egg-info/PKG-INFO
 synumses_pkg_pabele.egg-info/SOURCES.txt

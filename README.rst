@@ -29,7 +29,7 @@ visualize their parameters like:
 - quasi-Fermi-levels ...
 
 **SyNumSeS** stands for
-Symbolicall, Numerically
+Symbolically Numerically
 Semiconductor Simulation.
 
 It uses **SymPy** https://www.sympy.org/en/index.html to derive

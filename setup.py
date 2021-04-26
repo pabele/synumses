@@ -5,7 +5,7 @@ with open("DESCRIPTION.md", "r") as fh:
 
 
 setuptools.setup(name='synumses-pkg-pabele',
-                 version='0.8.3',
+                 version='0.8.4',
                  description='Numerical solver for semiconductor devices in Python',
                  long_description=long_description,
                  long_description_content_type="text/markdown",
