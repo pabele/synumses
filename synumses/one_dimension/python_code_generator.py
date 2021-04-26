@@ -88,7 +88,8 @@ recombination = symbols('parameters.recombination[i]')
 generation    = symbols('parameters.generation[i]')
 
 
-C_00 = symbols('parameters.C[i]')
+C_00 = symbols('parameters.C[i]')   # charge
+CA_00 = symbols('parameters.CA[i]') # sheet charge
 Epsilon_00 = symbols('parameters.Epsilon[i]')
 
 np_exp  = Function('np.exp')
@@ -109,12 +110,12 @@ Cau = symbols('parameters.Cau[i]')
 #p = Function('p')
 #n = Function('n')
 
-ni2 =(Nv_00*Nc_00)*exp(-Eg_00/Ut)
-p  = Nv_00*exp(( (-Chi_00 - Eg_00) + Phi_p_00 - Psi_00)/Ut)
-n  = Nc_00*exp((        +Chi_00    - Phi_n_00 + Psi_00)/Ut)
+ni2_00 =(Nv_00*Nc_00)*exp(-Eg_00/Ut)
+p_00  = Nv_00*exp(( (-Chi_00 - Eg_00) + Phi_p_00 - Psi_00)/Ut)
+n_00  = Nc_00*exp((        +Chi_00    - Phi_n_00 + Psi_00)/Ut)
 
-p_old  = Nv_00*exp(( (-Chi_00 - Eg_00) + Phi_p_old - Psi_old)/Ut)
-n_old  = Nc_00*exp((        +Chi_00    - Phi_n_old + Psi_old)/Ut)
+p_00_old  = Nv_00*exp(( (-Chi_00 - Eg_00) + Phi_p_old - Psi_old)/Ut)
+n_00_old  = Nc_00*exp((        +Chi_00    - Phi_n_old + Psi_old)/Ut)
 
 
 # **********************************
@@ -125,8 +126,9 @@ n_old  = Nc_00*exp((        +Chi_00    - Phi_n_old + Psi_old)/Ut)
 
 #
 # Poisson equation
+# 
 #
-poisson = ((Psi_p1 - 2.*Psi_00 + Psi_m1) + q / Epsilon_00 * (C_00 + p - n)*dx**2)
+poisson = ((Psi_p1 - 2.*Psi_00 + Psi_m1) + q / Epsilon_00 * (C_00 + p_00 - n_00 + CA_00/dx)*dx**2)
 
 
 # 
@@ -153,7 +155,7 @@ div_j_p = (
                 (Chi_k, Chi_00),(Chi_l, Chi_p1),(Nv_k, Nv_00),(Nv_l, Nv_p1),(mu_p_k, mu_p_00),(mu_p_l, mu_p_p1)])
     + j_p.subs([(Psi_k, Psi_m1),(Psi_l, Psi_00),(Phi_p_k, Phi_p_m1),(Phi_p_l,Phi_p_00),(Eg_k, Eg_m1),(Eg_l, Eg_00),
                 (Chi_k, Chi_m1),(Chi_l, Chi_00),(Nv_k, Nv_m1),(Nv_l, Nv_00),(mu_p_k, mu_p_m1),(mu_p_l, mu_p_00)])
-    - q*(Cau*(n*p-ni2)-generation)*dx
+    - q*(Cau*(n_00*p_00-ni2_00)-generation)*dx
 )
 
 div_j_n = (
@@ -161,14 +163,14 @@ div_j_n = (
                 (Chi_k, Chi_00),(Chi_l, Chi_p1),(Nc_k, Nc_00),(Nc_l, Nc_p1),(mu_n_k, mu_n_00),(mu_n_l, mu_n_p1)])
     - j_n.subs([(Psi_k, Psi_m1),(Psi_l, Psi_00),(Phi_n_k, Phi_n_m1),(Phi_n_l,Phi_n_00),
                 (Chi_k, Chi_m1),(Chi_l, Chi_00),(Nc_k, Nc_m1),(Nc_l, Nc_00),(mu_n_k, mu_n_m1),(mu_n_l, mu_n_00)])
-    - q*(Cau*(n*p-ni2)-generation)*dx
+    - q*(Cau*(n_00*p_00-ni2_00)-generation)*dx
 )
 
 #
 # Time dependent divergence of current density
 #
-div_j_p_t = div_j_p + q*(p - p_old)*(dx/dt)
-div_j_n_t = div_j_n + q*(n - n_old)*(dx/dt)
+div_j_p_t = div_j_p + q*(p_00 - p_00_old)*(dx/dt)
+div_j_n_t = div_j_n + q*(n_00 - n_00_old)*(dx/dt)
 
 #
 # The variable functions is defined before calling the functions

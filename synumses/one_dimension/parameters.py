@@ -33,7 +33,8 @@ It also defines the default device, a silicon pn junction.
    "Epsilon", "permittivity of the material", "np.full(n, Epsilon_r * Epsilon_0)"
    "mu_p", "hole mobility :math:`\mu_\mathrm{p}`", "np.full(n, 0.045)"
    "mu_n", "electron mobility :math:`\mu_\mathrm{n}`", "np.full(n, 0.14)"
-   "C", "doping", "np.zeros(n), -1E24/1E24"
+   "C_00", "doping", "np.zeros(n), -1E24/1E24"
+   "CA_00", "
    "Cau", "coefficient for recombination: q*(Cau*(n*p-ni2)-generation)*dx ", "np.full(n, 0)"
    "generation", "generation: q*(Cau*(n*p-ni2)-generation)*dx", "np.full(n, 0.0)"
 
@@ -125,6 +126,10 @@ def init_parameters():
         global C
         C = np.zeros(n)
 
+        # Cheet Charge
+        global CA
+        CA = np.zeros(n)
+        
         global Cau
         Cau = np.full(n, 0) # 1E-28
         

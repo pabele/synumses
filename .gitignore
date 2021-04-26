@@ -19,3 +19,6 @@ synumses/one_dimension/scharfetter_gummel_bernoulli_*.py
 
 # Jupyter Lab
 .ipynb_checkpoints
+
+#
+/examples/jupyter/10_Polarisation
